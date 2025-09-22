@@ -244,6 +244,10 @@ $row_today = mysqli_fetch_assoc($rs_today);
 
 $today = date("Y-m-d");
 
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'todayhouseprice.com';
+$baseUrl = $scheme."://".$host;
+
 
 /////////////////////조회수//////////////////////////
 if ($is_count) {
@@ -260,38 +264,72 @@ if ($is_count) {
 
 $this_site_for_login = str_replace('.php','',basename( $_SERVER[ "PHP_SELF" ] ));
 ?>
-<center>
-<span style="font-size:20px;">기준금리 : </span>
-<a href="https://m.search.naver.com/search.naver?where=m&sm=mtb_etc&mra=blJH&qvt=0&query=%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%20%EC%A4%91%EC%95%99%EC%9D%80%ED%96%89%20%EA%B8%B0%EC%A4%80%EA%B8%88%EB%A6%AC"><img style="vertical-align:top;" width="44", height="24" src="./move_kor.gif"></a> 
-<span style="font-size:20px;"><?=$row_today['gumri_korea']?></span>
-&nbsp;
-<a href="https://m.search.naver.com/p/crd/rd?m=1&px=736&py=298&sx=736&sy=298&p=hJnuJlpr4K8ssEFzQ5ZssssstIC-072630&q=%EA%B8%B0%EC%A4%80%EA%B8%88%EB%A6%AC&ie=utf8&rev=1&ssc=tab.m.all&f=m&w=m&s=LoFy%2FTw7JT27hrVNgxlLxg%3D%3D&time=1672725258737&abt=%5B%7B%22eid%22%3A%22PWL-AREA-EX%22%2C%22vid%22%3A%222%22%7D%2C%7B%22eid%22%3A%22SBR1%22%2C%22vid%22%3A%22634%22%7D%5D&a=nco_xgr*3.list&r=1&i=88211u5i_000000000000&u=https%3A%2F%2Fm.search.naver.com%2Fsearch.naver%3Fwhere%3Dm%26sm%3Dmtb_etc%26mra%3DblJH%26qvt%3D0%26query%3D%25EB%25AF%25B8%25EA%25B5%25AD%2520%25EC%25A4%2591%25EC%2595%2599%25EC%259D%2580%25ED%2596%2589%2520%25EA%25B8%25B0%25EC%25A4%2580%25EA%25B8%2588%25EB%25A6%25AC&cr=1"><img style="vertical-align: top;" width="44", height="24" src="./usa.png"></a>
-<span style="font-size:20px;"><?=$row_today['gumri_usa']?></span>
-&nbsp;&nbsp;
-<?php if($isMobile=='Y'){ echo "<br>";}?>
-<a href="https://m.search.naver.com/search.naver?sm=mtb_hty.top&where=m&oquery=%EA%B8%B0%EC%A4%80%EA%B8%88%EB%A6%AC&tqi=hJnuJlpr4K8ssEFzQ5ZssssstIC-072630&query=%ED%99%98%EC%9C%A8"><img style="vertical-align: top;" width="24", height="24" src="./dallor.png"></a>
-<span style="font-size:20px;">환율: <?=$row_today['dallor']?>원</span>
-
-&nbsp;&nbsp;
-<a href="https://finance.naver.com/sise/"><img style="vertical-align: top;" width="35", height="24" src="./chart.png"></a>
-<span style="font-size:20px;">코스피 : <?=$row_today['kospi']?></span>
-<br>
-<span style="font-size:15px;">(updated : <?=$row_today['update_date']?>)</span>
-</center>
-<br>
-<?php
-  if(!$userid){
-?>
-<span style="font-size:25px;"><b><a href="./login.php?site=<?=$this_site_for_login?>">로그인</a> <?php if($isMobile=='N'){ ?><--즐겨찾기기능<?php } ?></b></span>
-<?php
-  }else if($userid){
-    //$logged = $username."(".$userid.")";
-    $logged = $userid;
-?>
-<span style="font-size:25px;"><b><?=$logged ?>님<a href="./logout.php">로그아웃</a>  <a href="./apart_favorite.php" style="text-decoration-line: none;">[즐겨찾기]</a></b></span>
-<?php }?>
-
-<span style="font-size:25px; float:right;"><b><?php if(!$userid){?><a href="http://todayhouseprice.com/info.php" style="text-decoration-line: none;">[텔레그램]</a><a href="http://todayhouseprice.com/guide.php" style="text-decoration-line: none;">[사용가이드]</a><?php } ?><a href="http://todayhouseprice.com/list.php" style="text-decoration-line: none;">[자유게시판]</a><a href="http://todayhouseprice.com/apart_news.php" style="text-decoration-line: none;">[부동산뉴스]</a></b></span>
+<body class="thp-body">
+<div class="thp-wrapper">
+  <header class="thp-header">
+    <a class="thp-brand" href="<?=$baseUrl?>/apart_today.php?user_update=true">
+      <img src="<?=$baseUrl?>/todayhouseprice2.png" alt="오늘집값 로고" class="thp-brand__logo">
+      <div class="thp-brand__text">
+        <span class="thp-brand__title">오늘집값</span>
+        <span class="thp-brand__subtitle">최신 실거래 동향을 한눈에 확인하세요</span>
+      </div>
+    </a>
+    <div class="thp-user">
+      <?php if(!$userid){ ?>
+        <a class="thp-button" href="./login.php?site=<?=$this_site_for_login?>">로그인</a>
+        <?php if($isMobile=='N'){ ?><span class="thp-user__hint">즐겨찾기 기능을 이용해보세요</span><?php } ?>
+      <?php } else {
+        $logged = $userid;
+      ?>
+        <span class="thp-user__welcome"><?=$logged?>님</span>
+        <a class="thp-button thp-button--ghost" href="./apart_favorite.php">즐겨찾기</a>
+        <a class="thp-button" href="./logout.php">로그아웃</a>
+      <?php } ?>
+    </div>
+  </header>
+  <section class="thp-market">
+    <div class="thp-market__grid">
+      <a class="thp-market__item" href="https://m.search.naver.com/search.naver?where=m&sm=mtb_etc&mra=blJH&qvt=0&query=%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%20%EC%A4%91%EC%95%99%EC%9D%80%ED%96%89%20%EA%B8%B0%EC%A4%80%EA%B8%88%EB%A6%AC" target="_blank" rel="noopener">
+        <img src="<?=$baseUrl?>/move_kor.gif" alt="한국 기준금리" class="thp-market__icon">
+        <div>
+          <span class="thp-market__label">한국 기준금리</span>
+          <span class="thp-market__value"><?=$row_today['gumri_korea']?></span>
+        </div>
+      </a>
+      <a class="thp-market__item" href="https://m.search.naver.com/p/crd/rd?m=1&px=736&py=298&sx=736&sy=298&p=hJnuJlpr4K8ssEFzQ5ZssssstIC-072630&q=%EA%B8%B0%EC%A4%80%EA%B8%88%EB%A6%AC&ie=utf8&rev=1&ssc=tab.m.all&f=m&w=m&s=LoFy%2FTw7JT27hrVNgxlLxg%3D%3D&time=1672725258737&abt=%5B%7B%22eid%22%3A%22PWL-AREA-EX%22%2C%22vid%22%3A%222%22%7D%2C%7B%22eid%22%3A%22SBR1%22%2C%22vid%22%3A%22634%22%7D%5D&a=nco_xgr*3.list&r=1&i=88211u5i_000000000000&u=https%3A%2F%2Fm.search.naver.com%2Fsearch.naver%3Fwhere%3Dm%26sm%3Dmtb_etc%26mra%3DblJH%26qvt%3D0%26query%3D%25EB%25AF%25B8%25EA%25B5%25AD%2520%25EC%25A4%2591%25EC%2595%2599%25EC%259D%2580%25ED%2596%2589%2520%25EA%25B8%2580%25EC%25A4%2580%25EA%25B8%2588%25EB%25A6%25AC&cr=1" target="_blank" rel="noopener">
+        <img src="<?=$baseUrl?>/usa.png" alt="미국 기준금리" class="thp-market__icon">
+        <div>
+          <span class="thp-market__label">미국 기준금리</span>
+          <span class="thp-market__value"><?=$row_today['gumri_usa']?></span>
+        </div>
+      </a>
+      <a class="thp-market__item" href="https://m.search.naver.com/search.naver?sm=mtb_hty.top&where=m&oquery=%EA%B8%B0%EC%A4%80%EA%B8%88%EB%A6%AC&tqi=hJnuJlpr4K8ssEFzQ5ZssssstIC-072630&query=%ED%99%98%EC%9C%A8" target="_blank" rel="noopener">
+        <img src="<?=$baseUrl?>/dallor.png" alt="환율" class="thp-market__icon">
+        <div>
+          <span class="thp-market__label">원/달러 환율</span>
+          <span class="thp-market__value"><?=$row_today['dallor']?>원</span>
+        </div>
+      </a>
+      <a class="thp-market__item" href="https://finance.naver.com/sise/" target="_blank" rel="noopener">
+        <img src="<?=$baseUrl?>/chart.png" alt="코스피" class="thp-market__icon">
+        <div>
+          <span class="thp-market__label">코스피 지수</span>
+          <span class="thp-market__value"><?=$row_today['kospi']?></span>
+        </div>
+      </a>
+    </div>
+    <p class="thp-market__updated">업데이트 <?=$row_today['update_date']?></p>
+  </section>
+  <nav class="thp-quick-links">
+    <?php if(!$userid){ ?>
+      <a class="thp-link" href="<?=$baseUrl?>/info.php">텔레그램</a>
+      <a class="thp-link" href="<?=$baseUrl?>/guide.php">사용가이드</a>
+    <?php } ?>
+    <a class="thp-link" href="<?=$baseUrl?>/list.php">자유게시판</a>
+    <a class="thp-link" href="<?=$baseUrl?>/apart_news.php">부동산뉴스</a>
+  </nav>
+</div>
+<div class="thp-wrapper thp-wrapper--nav">
 <table>
     <thead>
     <tr>
@@ -490,9 +528,4 @@ if (!strpos($this_site,'officetel') and ($this_site_without_domain=='/apart_auct
 <?php } ?>
 
 
-<br>
-<center>
-<a href="./apart_today.php"><img style="vertical-align: middle;" width="100", height="100" src="./todayhouseprice2.png"></a>
-<span style="font-size:60px; vertical-align: middle; font-family: nanumpen;">&nbsp;&nbsp;오늘집값</span>
-</center>
-<br>
+</div>

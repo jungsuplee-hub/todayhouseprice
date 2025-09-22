@@ -547,45 +547,61 @@ xmlhttp.send();
 
 
 
-<select style="width:200px;font-size:30px;" name="day" id="day" onchange="apart_day_list(this)">
-<option value=<?php echo $today; ?> <?php if ($insert_date==$today){echo 'selected';} ?>><?php echo $today; ?></option>
-<option value=<?php echo $before1Day; ?> <?php if ($insert_date==$before1Day){echo 'selected';} ?>><?php echo $before1Day; ?></option>
-<option value=<?php echo $before2Day; ?> <?php if ($insert_date==$before2Day){echo 'selected';} ?>><?php echo $before2Day; ?></option>
-<option value=<?php echo $before3Day; ?> <?php if ($insert_date==$before3Day){echo 'selected';} ?>><?php echo $before3Day; ?></option>
-<option value=<?php echo $before4Day; ?> <?php if ($insert_date==$before4Day){echo 'selected';} ?>><?php echo $before4Day; ?></option>
-<option value=<?php echo $before5Day; ?> <?php if ($insert_date==$before5Day){echo 'selected';} ?>><?php echo $before5Day; ?></option>
-<option value=<?php echo $before6Day; ?> <?php if ($insert_date==$before6Day){echo 'selected';} ?>><?php echo $before6Day; ?></option>
-<option value=<?php echo $before7Day; ?> <?php if ($insert_date==$before7Day){echo 'selected';} ?>><?php echo $before7Day; ?></option>
-</select>
-<span style="font-size:30px;"><b>신규 등록된 </b></span>
-
-<select style="width:170px;font-size:30px;" name="type" id="type" onchange="apart_type(this)">
-	<option value="all" <?php if($type=='all'){echo 'selected';}?>>매매/전세</option>
-	<option value="meme" <?php if($type=='meme'){echo 'selected';}?>>매매</option>
-	<option value="rent" <?php if($type=='rent'){echo 'selected';}?>>전세</option>
-</select>
-<span style="font-size:30px;"><b>리스트</b></span>
-<br>
-
-
-<span style="font-size:30px;"></b></span><select style="width:220px;font-size:30px;" name="main" id="main" onchange="apart_list(this)">
 <?php
+$type_label = '매매/전세';
+if ($type == 'meme') {
+  $type_label = '매매';
+} elseif ($type == 'rent') {
+  $type_label = '전세';
+}
+?>
+<div class="thp-filters-card">
+  <h2 class="thp-section__title">신규 등록된 <?=$type_label?> 리스트</h2>
+  <div class="thp-filters">
+    <div class="thp-filters__group">
+      <label for="day" class="thp-filters__label">기준일</label>
+      <select name="day" id="day" onchange="apart_day_list(this)">
+        <option value=<?php echo $today; ?> <?php if ($insert_date==$today){echo 'selected';} ?>><?php echo $today; ?></option>
+        <option value=<?php echo $before1Day; ?> <?php if ($insert_date==$before1Day){echo 'selected';} ?>><?php echo $before1Day; ?></option>
+        <option value=<?php echo $before2Day; ?> <?php if ($insert_date==$before2Day){echo 'selected';} ?>><?php echo $before2Day; ?></option>
+        <option value=<?php echo $before3Day; ?> <?php if ($insert_date==$before3Day){echo 'selected';} ?>><?php echo $before3Day; ?></option>
+        <option value=<?php echo $before4Day; ?> <?php if ($insert_date==$before4Day){echo 'selected';} ?>><?php echo $before4Day; ?></option>
+        <option value=<?php echo $before5Day; ?> <?php if ($insert_date==$before5Day){echo 'selected';} ?>><?php echo $before5Day; ?></option>
+        <option value=<?php echo $before6Day; ?> <?php if ($insert_date==$before6Day){echo 'selected';} ?>><?php echo $before6Day; ?></option>
+        <option value=<?php echo $before7Day; ?> <?php if ($insert_date==$before7Day){echo 'selected';} ?>><?php echo $before7Day; ?></option>
+      </select>
+    </div>
+    <div class="thp-filters__group">
+      <label for="type" class="thp-filters__label">거래 유형</label>
+      <select name="type" id="type" onchange="apart_type(this)">
+        <option value="all" <?php if($type=='all'){echo 'selected';}?>>매매/전세</option>
+        <option value="meme" <?php if($type=='meme'){echo 'selected';}?>>매매</option>
+        <option value="rent" <?php if($type=='rent'){echo 'selected';}?>>전세</option>
+      </select>
+    </div>
+  </div>
+  <div class="thp-filters">
+    <div class="thp-filters__group">
+      <label for="main" class="thp-filters__label">지역</label>
+      <select name="main" id="main" onchange="apart_list(this)">
+<?php
+$rows_select = array();
 $rs_select = mysqli_query($Conn, "SELECT area_main_name FROM molit_area_info group by area_main_name ORDER BY MIN(area_code_seq)");
 while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
     $rows_select[] = $row_select;
 }?>
-  <option value="전체" <?php if ($area_main_name=='전체'){echo 'selected';} ?>>전체</option>
+        <option value="전체" <?php if ($area_main_name=='전체'){echo 'selected';} ?>>전체</option>
 <?php foreach ($rows_select as $row_select) { ?>
-  <option value=<?php echo $row_select['area_main_name']; if ($row_select['area_main_name']==$area_main_name){echo ' selected';}?>><?php echo $row_select['area_main_name']; ?></option>
+        <option value=<?php echo $row_select['area_main_name']; if ($row_select['area_main_name']==$area_main_name){echo ' selected';}?>><?php echo $row_select['area_main_name']; ?></option>
 <?php } ?>
-</select>
-
-
-
-
-<span style="font-size:30px;"><b>시군구 : </b></span><select style="width:220px;font-size:30px;" name="sub" id="sub" onchange="apart_sub_list(this)">
-<option value=''>선택</option>
+      </select>
+    </div>
+    <div class="thp-filters__group">
+      <label for="sub" class="thp-filters__label">시군구</label>
+      <select name="sub" id="sub" onchange="apart_sub_list(this)">
+        <option value=''>선택</option>
 <?php
+$rows_sub = array();
 $rs_sub = mysqli_query($Conn, "
             SELECT distinct a.area_sub_name
             FROM
@@ -600,17 +616,31 @@ while ( $row_sub = mysqli_fetch_assoc($rs_sub) ) {
     $rows_sub[] = $row_sub;
 }
 foreach ($rows_sub as $row_sub) { ?>
-  <option value=<?php echo $row_sub['area_sub_name']; if ($row_sub['area_sub_name']==$area_sub_name){echo ' selected';}?>><?php echo $row_sub['area_sub_name']; ?></option>
+        <option value=<?php echo $row_sub['area_sub_name']; if ($row_sub['area_sub_name']==$area_sub_name){echo ' selected';}?>><?php echo $row_sub['area_sub_name']; ?></option>
 <?php } ?>
-</select>
-
-<br>
-<form name="mform"><span style="font-size:25px;"><b>전용</b></span>
- <input style="width:22px; height:22px;" type="checkbox" id="size1" onclick="check1(this)" <?php if($size1=="true"){ echo "checked";}?>><span style="font-size:25px;"><b>40 ㎡이하 </b></span>
- <input style="width:22px; height:22px;" type="checkbox" id="size2" onclick="check2(this)" <?php if($size2=="true"){ echo "checked";}?>><span style="font-size:25px;"><b>40-60 ㎡ </b></span>
- <input style="width:22px; height:22px;" type="checkbox" id="size3" onclick="check3(this)" <?php if($size3=="true"){ echo "checked";}?>><span style="font-size:25px;"><b>60-85 ㎡ </b></span>
- <input style="width:22px; height:22px;" type="checkbox" id="size4" onclick="check4(this)" <?php if($size4=="true"){ echo "checked";}?>><span style="font-size:25px;"><b>85 ㎡초과</b></span>
-</form>
+      </select>
+    </div>
+  </div>
+  <form name="mform" class="thp-chip-group">
+    <span class="thp-filters__label">전용면적</span>
+    <label class="thp-chip">
+      <input type="checkbox" id="size1" onclick="check1(this)" <?php if($size1=="true"){ echo "checked";}?>>
+      <span>40㎡ 이하</span>
+    </label>
+    <label class="thp-chip">
+      <input type="checkbox" id="size2" onclick="check2(this)" <?php if($size2=="true"){ echo "checked";}?>>
+      <span>40-60㎡</span>
+    </label>
+    <label class="thp-chip">
+      <input type="checkbox" id="size3" onclick="check3(this)" <?php if($size3=="true"){ echo "checked";}?>>
+      <span>60-85㎡</span>
+    </label>
+    <label class="thp-chip">
+      <input type="checkbox" id="size4" onclick="check4(this)" <?php if($size4=="true"){ echo "checked";}?>>
+      <span>85㎡ 초과</span>
+    </label>
+  </form>
+</div>
 
 <script>
 function check1(country){
