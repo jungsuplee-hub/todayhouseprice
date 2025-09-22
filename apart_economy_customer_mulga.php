@@ -1,0 +1,280 @@
+<?php
+include_once "{$_SERVER[DOCUMENT_ROOT]}/top_page.php";
+?>
+
+<?php
+$sql_chart = "
+select
+yyyymm,
+IFNULL(CAST(MAX(case when area = '전국' then cnt end) as DECIMAL(10,0)),0) as cnt_all
+from TongGye_Customer_Mulga
+group by yyyymm
+order by yyyymm
+";
+
+$sql_min_max = "
+select min(CAST(cnt as DECIMAL(10,0))) as temp_min, max(CAST(cnt as DECIMAL(10,0)))+10 as temp_max
+FROM TongGye_Customer_Mulga
+where area = '전국'
+";
+
+
+$sql = "
+select
+concat(substr(yyyymm,1,4),'년 ',substr(yyyymm,5,2)) as yyyymm,
+IFNULL(CAST(MAX(case when area = '전국' then cnt end) as DECIMAL(10,0)),0) as cnt_all,
+IFNULL(CAST(MAX(case when area = '서울특별시' then cnt end) as DECIMAL(10,0)),0) as cnt1,
+IFNULL(CAST(MAX(case when area = '부산광역시' then cnt end) as DECIMAL(10,0)),0) as cnt2,
+IFNULL(CAST(MAX(case when area = '대구광역시' then cnt end) as DECIMAL(10,0)),0) as cnt3,
+IFNULL(CAST(MAX(case when area = '인천광역시' then cnt end) as DECIMAL(10,0)),0) as cnt4,
+IFNULL(CAST(MAX(case when area = '광주광역시' then cnt end) as DECIMAL(10,0)),0) as cnt5,
+IFNULL(CAST(MAX(case when area = '대전광역시' then cnt end) as DECIMAL(10,0)),0) as cnt6,
+IFNULL(CAST(MAX(case when area = '울산광역시' then cnt end) as DECIMAL(10,0)),0) as cnt7,
+IFNULL(CAST(MAX(case when area = '경기도' then cnt end) as DECIMAL(10,0)),0) as cnt8,
+IFNULL(CAST(MAX(case when area = '강원도' then cnt end) as DECIMAL(10,0)),0) as cnt9,
+IFNULL(CAST(MAX(case when area = '충청북도' then cnt end) as DECIMAL(10,0)),0) as cnt10,
+IFNULL(CAST(MAX(case when area = '충청남도' then cnt end) as DECIMAL(10,0)),0) as cnt11,
+IFNULL(CAST(MAX(case when area = '전라북도' then cnt end) as DECIMAL(10,0)),0) as cnt12,
+IFNULL(CAST(MAX(case when area = '전라남도' then cnt end) as DECIMAL(10,0)),0) as cnt13,
+IFNULL(CAST(MAX(case when area = '경상북도' then cnt end) as DECIMAL(10,0)),0) as cnt14,
+IFNULL(CAST(MAX(case when area = '경상남도' then cnt end) as DECIMAL(10,0)),0) as cnt15,
+IFNULL(CAST(MAX(case when area = '제주특별자치도' then cnt end) as DECIMAL(10,0)),0) as cnt16,
+IFNULL(CAST(MAX(case when area = '세종특별자치시' then cnt end) as DECIMAL(10,0)),0) as cnt17
+from TongGye_Customer_Mulga
+group by yyyymm
+order by yyyymm desc
+    ";
+
+
+$result_chart = mysqli_query($Conn, $sql_chart);
+
+while ($row_chart = mysqli_fetch_assoc($result_chart)) {
+    $data_array[] = $row_chart;
+}
+$chart = json_encode($data_array);
+
+$result_min_max = mysqli_query($Conn, $sql_min_max);
+$row_min_max = mysqli_fetch_assoc($result_min_max);
+//여기는 그래프 관련
+
+
+$rs = mysqli_query($Conn, $sql);
+
+while ( $row = mysqli_fetch_assoc($rs) ) {
+    $rows[] = $row;
+}
+
+?>
+
+
+
+
+<?php if($isMobile == "N") { ?>
+<div id='container'>
+    <div id='box-left'>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871"
+             crossorigin="anonymous"></script>
+        <!-- 디스플레이광고 수직 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2265060002718871"
+             data-ad-slot="7863262703"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div id='box-center'>
+<?php } ?>
+
+
+
+
+<!--<a style="font-size:15px; float:right;" href='./info.php'>(텔레그램 매일 알림받기)</a>-->
+<span style="font-size:20px;">통계청 자료를 바탕으로 만들어진 데이터 입니다. <a href='https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1J20003'>[출처링크]</a></span>
+<br>
+<br>
+
+<span style="font-size:15px;">
+  ◦ 소비자물가지수는 가격변동을 측정하는 것으로 가격의 절대수준을 나타내지는 않음<br>
+  - 따라서 지역별로 기준시점(2020년=100)의 가격수준이 다르기 때문에 지역별 소비자물가지수를 이용하여 지역간 상대적인 물가수준 차이를 비교하는 것은 부적절함<br>
+  ◦  2020년 이전 소비자물가지수는 소수 3자리로, 2020년 이후 소비자물가지수는 소수 2자리로 작성되고 있음<br>
+</span>
+<br>
+<br>
+
+<span style="font-size:30px;">전국 소비자물가지수 그래프 (2020년: 100)</span>
+<br>
+<br>
+<script type="text/javascript">
+    google.charts.load('current', { packages: ['corechart', 'line'] });
+    google.charts.load('current', { packages: ['table'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var chart_array = <?php echo $chart; ?>;
+        //console.log(JSON.stringify(chart_array))
+        var header = ['Date&Time(MM-DD HH:MM)', '소비자물가지수'];
+        var row = "";
+        var rows = new Array();
+        jQuery.each(chart_array, function(index, item) {
+            row = [
+                item.yyyymm,  // 너무 긴 날짜 및 시간을 짧게 추출
+                Number(item.cnt_all)
+            ];
+            rows.push(row);
+        });
+
+        var jsonData = [header].concat(rows);
+        var data = new google.visualization.arrayToDataTable(jsonData);
+
+        var lineChartOptions = {
+            title: '소비자물가지수 추이',
+            legend: 'none',
+            chartArea: {left: '5%', width: '92%'},
+            hAxis: {
+                title: 'Time',
+                showTextEvery: 20    // X축 레이블이 너무 많아 보기 힘드므로 4개마다 하나씩 표시
+            },
+            series: {
+                0: { targetAxisIndex: 0, lineWidth: 4}
+            },
+            vAxes: {
+                0: {
+                    viewWindow: { min: <?=$row_min_max['temp_min']?>, max: <?=$row_min_max['temp_max']?> }
+                }
+            },
+            interpolateNulls : true
+            //,
+            //curveType: 'function',
+            //legend: { position: 'bottom' }
+        };
+
+        var lineChart = new google.visualization.LineChart(document.getElementById('lineChart_div'));
+        lineChart.draw(data, lineChartOptions);
+
+        // 테이블 차트
+        //var tableChartOptions = {
+        //    showRowNumber: true,
+        //    width: '40%',
+        //    height: '20%'
+        //}
+
+        //var tableChart = new google.visualization.Table(document.getElementById('tableChart_div'));
+        //tableChart.draw(data, tableChartOptions);
+    }
+</script>
+
+
+<center><div id="lineChart_div" style="width: 100%; height: 400px"></div></center>
+
+
+<?php if($advertize=="1"){ ?>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871"
+       crossorigin="anonymous"></script>
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-format="fluid"
+       data-ad-layout-key="-fb+5w+4e-db+86"
+       data-ad-client="ca-pub-2265060002718871"
+       data-ad-slot="3474043280"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+<?php } ?>
+
+
+<table>
+    <thead>
+    <tr>
+        <th style="font-size: 15px;">조사시점</th>
+        <th style="font-size: 15px;">전국</th>
+        <th style="font-size: 15px;">서울</th>
+        <th style="font-size: 15px;">부산</th>
+        <th style="font-size: 15px;">대구</th>
+        <th style="font-size: 15px;">인천</th>
+        <th style="font-size: 15px;">광주</th>
+        <th style="font-size: 15px;">대전</th>
+        <th style="font-size: 15px;">울산</th>
+        <th style="font-size: 15px;">경기</th>
+        <th style="font-size: 15px;">강원</th>
+        <th style="font-size: 15px;">충북</th>
+        <th style="font-size: 15px;">충남</th>
+        <th style="font-size: 15px;">전북</th>
+        <th style="font-size: 15px;">전남</th>
+        <th style="font-size: 15px;">경북</th>
+        <th style="font-size: 15px;">경남</th>
+        <th style="font-size: 15px;">제주</th>
+        <th style="font-size: 15px;">세종</th>
+    </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($rows as $row) { ?>
+      <tr>
+          <td style="font-size: 15px;"><b><?=$row['yyyymm']?>월</b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt_all']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt1']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt2']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt3']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt4']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt5']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt6']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt7']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt8']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt9']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt10']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt11']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt12']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt13']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt14']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt15']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt16']?></b></td>
+          <td style="font-size: 15px;"><b><?=$row['cnt17']?></b></td>
+
+      </tr>
+      <?php } ?>
+    </tbody>
+</table>
+
+<?php if($advertize=="1"){ ?>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871"
+       crossorigin="anonymous"></script>
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-format="fluid"
+       data-ad-layout-key="-fb+5w+4e-db+86"
+       data-ad-client="ca-pub-2265060002718871"
+       data-ad-slot="3474043280"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+<?php } ?>
+
+
+
+<?php if($isMobile == "N") { ?>
+  </div>
+
+
+  <div id='box-right'>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871"
+         crossorigin="anonymous"></script>
+    <!-- 디스플레이광고 수직 -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2265060002718871"
+         data-ad-slot="7863262703"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+
+  </div>
+</div>
+<?php } ?>
+
+<center><span style="font-size:20px;"><b>Copyright ©2022 TodayHousePrice, Inc. All rights reserved<br>Developer : todayhouseprice.com@gmail.com</b></span></center>
