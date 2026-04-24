@@ -2,15 +2,15 @@
 include_once "./top_page.php";
 
 // Request Parameters
-$user_update = $_REQUEST["user_update"];
-$area_main_name = $_REQUEST["area_main_name"];
-$area_sub_name = $_REQUEST["area_sub_name"];
-$insert_date = $_REQUEST["insert_date"];
-$type = $_REQUEST["type"];
-$size1 = $_REQUEST["size1"];
-$size2 = $_REQUEST["size2"];
-$size3 = $_REQUEST["size3"];
-$size4 = $_REQUEST["size4"];
+$user_update = $_REQUEST["user_update"] ?? "";
+$area_main_name = $_REQUEST["area_main_name"] ?? "";
+$area_sub_name = $_REQUEST["area_sub_name"] ?? "";
+$insert_date = $_REQUEST["insert_date"] ?? "";
+$type = $_REQUEST["type"] ?? "";
+$size1 = $_REQUEST["size1"] ?? "";
+$size2 = $_REQUEST["size2"] ?? "";
+$size3 = $_REQUEST["size3"] ?? "";
+$size4 = $_REQUEST["size4"] ?? "";
 
 // Date calculations
 $today = date("Y-m-d");
@@ -262,7 +262,7 @@ while ($row = mysqli_fetch_assoc($rs)) {
     </tr>
   </thead>
   <tbody>
-    <?php foreach ($rows as $row) : ?>
+    <?php foreach (($rows ?? []) as $row) : ?>
       <tr>
         <td><?= $row['apart_name'] ?><br><?= $row['yearmonthday'] ?><br><?= $row['area_main_name'] ?> <?= $row['area_name'] ?> <?= $row['doing'] ?></td>
         <td><?= $row['size'] ?>㎡<br><?= $row['stair'] ?>층<br><?= $row['TYPE'] ?></td>

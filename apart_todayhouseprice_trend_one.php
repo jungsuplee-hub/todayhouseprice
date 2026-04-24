@@ -3,7 +3,7 @@ include_once "./top_page.php";
 ?>
 <?php
 
-$area_main_name = $_REQUEST["area_main_name"];
+$area_main_name = $_REQUEST["area_main_name"] ?? "";
 
 if($area_main_name == ""){
   $area_main_name = "서울특별시";
@@ -129,7 +129,7 @@ $rs_select = mysqli_query($Conn, "SELECT area_main_name FROM molit_area_info gro
 while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
     $rows_select[] = $row_select;
 }?>
-<?php foreach ($rows_select as $row_select) { ?>
+<?php foreach (($rows_select ?? []) as $row_select) { ?>
   <option value=<?php echo $row_select['area_main_name']; if ($row_select['area_main_name']==$area_main_name){echo ' selected';}?>><?php echo $row_select['area_main_name']; ?></option>
 <?php } ?>
 </select>
@@ -250,7 +250,7 @@ function apart_list(e) {
     </tr>
     </thead>
     <tbody>
-      <?php foreach ($rows as $row) { ?>
+      <?php foreach (($rows ?? []) as $row) { ?>
       <tr>
           <td style="font-size: 15px;"><b><?=$row['yyyyquarter']?>분기</b></td>
           <td style="font-size: 15px;"><b><?=$row['cnt_all']?></b></td>

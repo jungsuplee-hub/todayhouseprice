@@ -2,18 +2,18 @@
 	include './config.php';
 	include './db/db_con.php';
 
-	$bno = $_POST['bno'];
-	//$userpw = $_POST['dat_pw'];
+	$bno = $_POST['bno'] ?? "";
+	//$userpw = $_POST['dat_pw'] ?? "";
 	$times = mktime();  // ���� ������ �ð��� timestamp ������ ������
   $date1 = date("Y-m-d H:i:s", $times);  // �� -> ��-��-�� ��:��:��  ��ȯ
 
-	if($_POST['content']!=''){
+	if($_POST['content'] ?? ""!=''){
 		$sql = mq("insert
 						reply
 				   set
 						con_num = '".$bno."',
 						name = '".$userid."',
-						content = '".$_POST['content']."',
+						content = '".$_POST['content'] ?? ""."',
 						date = '".$date1."'
 				");
 			echo "

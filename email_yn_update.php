@@ -1,7 +1,7 @@
 <?php
-    $email   = $_REQUEST['email'];
-    $status = $_REQUEST['status']; // 입력받은 패스워드를 해쉬값으로 암호화
-    $from = $_REQUEST['from'];
+    $email   = $_REQUEST['email'] ?? "";
+    $status = $_REQUEST['status'] ?? ""; // 입력받은 패스워드를 해쉬값으로 암호화
+    $from = $_REQUEST['from'] ?? "";
 
     $Conn = mysqli_connect("127.0.0.1", "root", "e0425820", "jsdb", 3306);
     $rs = mysqli_query($Conn, "select count(1) as cnt from user where email = '$email';");

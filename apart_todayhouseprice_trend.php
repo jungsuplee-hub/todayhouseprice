@@ -33,7 +33,7 @@ $Conn = mysqli_connect("127.0.0.1", "root", "e0425820", "jsdb", 33306);
 $today = date("Y-m-d");
 include_once "./config.php";
 //session_start();
-//$userid = $_SESSION["userid"];
+//$userid = $_SESSION["userid"] ?? "";
 /////////////////////조회수//////////////////////////
 $is_count = false;
 if (!isset($_COOKIE["todayhouseprice"])) {
@@ -317,7 +317,7 @@ $this_site = str_replace('.php','',basename( $_SERVER[ "PHP_SELF" ] ));
         </tr>
         </thead>
         <tbody>
-          <?php foreach ($rows as $row) { ?>
+          <?php foreach (($rows ?? []) as $row) { ?>
           <tr>
               <td style="font-size: 15px;"><b><?=$row['insert_date']?></b></td>
               <td style="font-size: 15px;"><b><?=$row['up_price']?> 억</b></td>
@@ -507,7 +507,7 @@ while ( $row2 = mysqli_fetch_assoc($rs2) ) {
         </tr>
         </thead>
         <tbody>
-          <?php foreach ($rows2 as $row2) { ?>
+          <?php foreach (($rows2 ?? []) as $row2) { ?>
           <tr>
               <td style="font-size: 15px;"><b><?=$row2['insert_date']?></b></td>
               <td style="font-size: 15px;"><b><?=$row2['up_cnt']?> 건</b></td>
@@ -713,7 +713,7 @@ while ( $row3 = mysqli_fetch_assoc($rs3) ) {
         </tr>
         </thead>
         <tbody>
-          <?php foreach ($rows3 as $row3) { ?>
+          <?php foreach (($rows3 ?? []) as $row3) { ?>
           <tr>
               <td style="font-size: 15px;"><b><?=$row3['insert_date']?></b></td>
               <td style="font-size: 15px;"><b><?=$row3['avg_up']?> 억</b></td>

@@ -2,9 +2,9 @@
 	include "./config.php";
 	include "./db/db_con.php";
 	session_start();
-	$userid = $_SESSION["userid"];
+	$userid = $_SESSION["userid"] ?? "";
 
-	$bno = $_GET['idx']; // $bno에 idx값을 받아와 넣음
+	$bno = $_GET['idx'] ?? ""; // $bno에 idx값을 받아와 넣음
 	/* 조회수 올리기  */
 	$hit = mysqli_fetch_array(mq("select
 									*

@@ -3,16 +3,16 @@ include_once "./top_page.php";
 ?>
 
 <?php
-$user_update = $_REQUEST["user_update"];
-$area_main_name = $_REQUEST["area_main_name"];
-$area_sub_name = $_REQUEST["area_sub_name"];
-$insert_date = $_REQUEST["insert_date"];
-$type = $_REQUEST["type"];
+$user_update = $_REQUEST["user_update"] ?? "";
+$area_main_name = $_REQUEST["area_main_name"] ?? "";
+$area_sub_name = $_REQUEST["area_sub_name"] ?? "";
+$insert_date = $_REQUEST["insert_date"] ?? "";
+$type = $_REQUEST["type"] ?? "";
 
-$size1 = $_REQUEST["size1"];
-$size2 = $_REQUEST["size2"];
-$size3 = $_REQUEST["size3"];
-$size4 = $_REQUEST["size4"];
+$size1 = $_REQUEST["size1"] ?? "";
+$size2 = $_REQUEST["size2"] ?? "";
+$size3 = $_REQUEST["size3"] ?? "";
+$size4 = $_REQUEST["size4"] ?? "";
 
 $before1Day = date("Y-m-d", strtotime($today." -1 day"));
 $before2Day = date("Y-m-d", strtotime($today." -2 day"));
@@ -575,7 +575,7 @@ while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
     $rows_select[] = $row_select;
 }?>
   <option value="전체" <?php if ($area_main_name=='전체'){echo 'selected';} ?>>전체</option>
-<?php foreach ($rows_select as $row_select) { ?>
+<?php foreach (($rows_select ?? []) as $row_select) { ?>
   <option value=<?php echo $row_select['area_main_name']; if ($row_select['area_main_name']==$area_main_name){echo ' selected';}?>><?php echo $row_select['area_main_name']; ?></option>
 <?php } ?>
 </select>
@@ -599,7 +599,7 @@ $rs_sub = mysqli_query($Conn, "
 while ( $row_sub = mysqli_fetch_assoc($rs_sub) ) {
     $rows_sub[] = $row_sub;
 }
-foreach ($rows_sub as $row_sub) { ?>
+foreach (($rows_sub ?? []) as $row_sub) { ?>
   <option value=<?php echo $row_sub['area_sub_name']; if ($row_sub['area_sub_name']==$area_sub_name){echo ' selected';}?>><?php echo $row_sub['area_sub_name']; ?></option>
 <?php } ?>
 </select>
@@ -651,7 +651,7 @@ function check4(country){
     </tr>
     </thead>
     <tbody>
-      <?php foreach ($rows_favorite as $row_favorite) { ?>
+      <?php foreach (($rows_favorite ?? []) as $row_favorite) { ?>
       <tr>
         <?php if($isMobile == "Y") { ?>
           <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px; width:34%;"><a href='./apart.php?area_main_name=<?=$row_favorite[area_main_name]?>&apart_name=<?=$row_favorite[apart_name]?>&size=<?=$row_favorite[size]?>&dong=<?=$row_favorite[doing]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite['apart_name']?></span></b><br><?=$row_favorite['yearmonthday']?><br><?=$row_favorite['area_main_name']?> <?=$row_favorite['area_name']?> <?=$row_favorite['doing']?></td>
@@ -704,7 +704,7 @@ function check4(country){
       <?php } ?>
     </tbody>
     <tbody>
-      <?php foreach ($rows_favorite_rent as $row_favorite_rent) { ?>
+      <?php foreach (($rows_favorite_rent ?? []) as $row_favorite_rent) { ?>
       <tr>
         <?php if($isMobile == "Y") { ?>
           <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px; width:34%;"><a href='./apart_rent.php?area_main_name=<?=$row_favorite_rent[area_main_name]?>&apart_name=<?=$row_favorite_rent[apart_name]?>&size=<?=$row_favorite_rent[size]?>&dong=<?=$row_favorite_rent[dong]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite_rent['apart_name']?></span></b><br><?=$row_favorite_rent['yearmonthday']?><br><?=$row_favorite_rent['area_main_name']?> <?=$row_favorite_rent['area_name']?> <?=$row_favorite_rent[dong]?></td>
@@ -799,7 +799,7 @@ function check4(country){
     </tr>
     </thead>
     <tbody>
-      <?php $add_count = 0; foreach ($rows as $row) { if($add_count!=0 && fmod($add_count, 15)==0){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
+      <?php $add_count = 0; foreach (($rows ?? []) as $row) { if($add_count!=0 && fmod($add_count, 15)==0){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
       <tr>
           <td style="font-size: 20px; width:34%;"><a href='./apart.php?area_main_name=<?=$row[area_main_name]?>&apart_name=<?=$row[apart_name]?>&size=<?=$row[size]?>&dong=<?=$row[doing]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row['apart_name']?></span></b><br><?=$row['yearmonthday']?></b><br><?=$row['area_main_name']?> <?=$row['area_name']?> <?=$row['doing']?></td>
           <td style="font-size: 20px; width:14%;"><b><?=$row['size']?>㎡</b><br><?=$row['stair']?>층<br><?php if($row['TYPE']=='직거래'){ echo "<span style='color:red'><b>직거래</b></span>"; }else{ echo $row['TYPE']; } ?></td>
@@ -856,7 +856,7 @@ function check4(country){
     </tr>
     </thead>
     <tbody>
-      <?php $add_count = 0; foreach ($rows_rent as $row_rent) { if($add_count!=0 && fmod($add_count, 15)==0){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
+      <?php $add_count = 0; foreach (($rows_rent ?? []) as $row_rent) { if($add_count!=0 && fmod($add_count, 15)==0){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
       <tr>
           <td style="font-size: 20px; width:34%;"><a href='./apart_rent.php?area_main_name=<?=$row_rent[area_main_name]?>&apart_name=<?=$row_rent[apart_name]?>&size=<?=$row_rent[size]?>&dong=<?=$row_rent[dong]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_rent['apart_name']?></span></b><br><?=$row_rent['yearmonthday']?></b><br><?=$row_rent['area_main_name']?> <?=$row_rent['area_name']?> <?=$row_rent['dong']?></td>
           <td style="font-size: 20px; width:14%;"><b><?=$row_rent['size']?>㎡</b><br><?=$row_rent['stair']?>층<br><?php if($row_rent['TYPE']=='직거래'){ echo "<span style='color:red'>직거래</span>"; }else{ echo $row_rent['TYPE']; } ?></td>

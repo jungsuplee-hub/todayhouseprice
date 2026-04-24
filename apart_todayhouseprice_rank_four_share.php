@@ -9,12 +9,12 @@ mysqli_query($Conn, "set session character_set_connection=utf8;");
 mysqli_query($Conn, "set session character_set_results=utf8;");
 mysqli_query($Conn, "set session character_set_client=utf8;");
 
-$area_main_name = $_REQUEST["area_main_name"];
+$area_main_name = $_REQUEST["area_main_name"] ?? "";
 
-$size1 = $_REQUEST["size1"];
-$size2 = $_REQUEST["size2"];
-$size3 = $_REQUEST["size3"];
-$size4 = $_REQUEST["size4"];
+$size1 = $_REQUEST["size1"] ?? "";
+$size2 = $_REQUEST["size2"] ?? "";
+$size3 = $_REQUEST["size3"] ?? "";
+$size4 = $_REQUEST["size4"] ?? "";
 
 if ($area_main_name==""){
   $size1 = "true";
@@ -152,7 +152,7 @@ while ( $row = mysqli_fetch_assoc($rs) ) {
     </tr>
     </thead>
     <tbody>
-      <?php $add_count = 0; foreach ($rows as $row) { $add_count = $add_count + 1; ?>
+      <?php $add_count = 0; foreach (($rows ?? []) as $row) { $add_count = $add_count + 1; ?>
       <tr>
           <td style="font-size: 30px;"><b><?=$add_count?></b></td>
           <td><span style="font-size: 30px;"><b><?=$row['apart_name']?></b></span><br><span style="font-size: 20px;"><?=$row['area_name']?> <?=$row['dong']?></span></td>

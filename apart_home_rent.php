@@ -2,13 +2,13 @@
 include_once "./top_page.php";
 ?>
 <?php
-$user_update = $_REQUEST["user_update"];
-$area_main_name = $_REQUEST["area_main_name"];
-$area_sub_name = $_REQUEST["area_sub_name"];
-$dong = $_REQUEST["dong"];
-$apart_name = $_REQUEST["apart_name"];
-$orderby = $_REQUEST["orderby"];
-$main = $_REQUEST["main"];
+$user_update = $_REQUEST["user_update"] ?? "";
+$area_main_name = $_REQUEST["area_main_name"] ?? "";
+$area_sub_name = $_REQUEST["area_sub_name"] ?? "";
+$dong = $_REQUEST["dong"] ?? "";
+$apart_name = $_REQUEST["apart_name"] ?? "";
+$orderby = $_REQUEST["orderby"] ?? "";
+$main = $_REQUEST["main"] ?? "";
 
 
 if($userid && $user_update=="true"){
@@ -215,7 +215,7 @@ while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
     $rows_select[] = $row_select;
 }
 
-foreach ($rows_select as $row_select) { ?>
+foreach (($rows_select ?? []) as $row_select) { ?>
   <option value=<?php echo $row_select['area_main_name']; if ($row_select['area_main_name']==$area_main_name){echo ' selected';}?>><?php echo $row_select['area_main_name']; ?></option>
 <?php } ?>
 </select>
@@ -237,7 +237,7 @@ while ( $row2_select = mysqli_fetch_assoc($rs2_select) ) {
     $rows2_select[] = $row2_select;
 }
 
-foreach ($rows2_select as $row2_select) { ?>
+foreach (($rows2_select ?? []) as $row2_select) { ?>
   <option value=<?php echo $row2_select['area_sub_name']; if ($row2_select['area_sub_name']==$area_sub_name){echo ' selected';}?>><?php echo $row2_select['area_sub_name']; ?></option>
 <?php } ?>
 </select>
@@ -256,7 +256,7 @@ while ( $row3_select = mysqli_fetch_assoc($rs3_select) ) {
     $rows3_select[] = $row3_select;
 }
 
-foreach ($rows3_select as $row3_select) { ?>
+foreach (($rows3_select ?? []) as $row3_select) { ?>
   <option value=<?php echo $row3_select['dong']; if ($row3_select['dong']==$dong){echo ' selected';}?>><?php echo $row3_select['dong']; ?></option>
 <?php } ?>
 </select>
@@ -272,7 +272,7 @@ while ( $row4_select = mysqli_fetch_assoc($rs4_select) ) {
     $rows4_select[] = $row4_select;
 }
 
-foreach ($rows4_select as $row4_select) { ?>
+foreach (($rows4_select ?? []) as $row4_select) { ?>
   <option value=<?php echo $row4_select['apart_name']; if ($row4_select['apart_name']==$apart_name){echo ' selected';}?>><?php echo $row4_select['apart_name']; ?></option>
 <?php } ?>
 </select>
@@ -443,7 +443,7 @@ function apart_main(e) {
     </tr>
     </thead>
     <tbody>
-      <?php $add_count = 0; foreach ($rows as $row) { if($add_count!=0 && fmod($add_count, 15)==0 && $isMobile == "Y"){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
+      <?php $add_count = 0; foreach (($rows ?? []) as $row) { if($add_count!=0 && fmod($add_count, 15)==0 && $isMobile == "Y"){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
       <tr>
           <td style="font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row[area_main_name]?>&apart_name=<?=$row[apart_name]?>&size=<?=$row[size]?>&dong=<?=$row[dong]?>&all_area=N'><b><?=$row['apart_name']?></b><br><?=$row['area_name']?> <?=$row['dong']?></td>
           <!--<td style="font-size: 20px;"><b><?=$row['size']?>㎡</b></td>-->

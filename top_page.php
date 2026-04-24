@@ -223,7 +223,7 @@ if($isMobile=='Y'){
 session_start();
 //session_start();
 $is_count = false;
-$userid = $_SESSION["userid"];
+$userid = $_SESSION["userid"] ?? "";
 if (!isset($_COOKIE["todayhouseprice"])) {
     setcookie("todayhouseprice", "count", time() + 60 * 60 * 24);
     $is_count = true;

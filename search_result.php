@@ -4,12 +4,12 @@
 
 	// 현재 페이지 번호를 확인
 	if (isset($_GET["page"]))
-		$page = $_GET["page"]; //1,2,3,4,5
+		$page = $_GET["page"] ?? ""; //1,2,3,4,5
 	else
 		$page = 1;
 
-	$category = $_GET['category'];
-	$search = $_GET['search'];
+	$category = $_GET['category'] ?? "";
+	$search = $_GET['search'] ?? "";
 
 	$Conn = mysqli_connect("127.0.0.1", "root", "e0425820", "jsdb", 3306);
 	$today = date("Y-m-d");
