@@ -48,7 +48,7 @@ if($userid && $user_update=="true"){
     select area_main_name, size1, size2, size3, size4 from user where id = '$userid'
   ";
   $rs_user = mysqli_query($Conn, $sql_select_user);
-  $row_user = mysqli_fetch_assoc($rs_user);
+  $row_user = $rs_user ? mysqli_fetch_assoc($rs_user) : null;
 
   $area_main_name = $row_user["area_main_name"];
   $size1 = $row_user["size1"];
@@ -255,7 +255,7 @@ if ($rs_count==0){
     }
       
 }
-while ( $row = mysqli_fetch_assoc($rs) ) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
       
@@ -430,34 +430,34 @@ FORMAT(IFNULL((SELECT SUM(COUNT) from molit_visit_count WHERE YMD = '$today'),0)
 FROM DUAL;
 ";
 $rs_count = mysqli_query($Conn, $sql_count);
-$row_count = mysqli_fetch_assoc($rs_count);
+$row_count = $rs_count ? mysqli_fetch_assoc($rs_count) : null;
 
 
 
 $rs_rent = mysqli_query($Conn, $sql_rent);
 $rs_rent_count = mysqli_num_rows($rs_rent);
-while ( $row_rent = mysqli_fetch_assoc($rs_rent) ) {
+while ( $rs_rent && ($row_rent = mysqli_fetch_assoc($rs_rent)) ) {
     $rows_rent[] = $row_rent;
 }
 
 $rs_favorite = mysqli_query($Conn, $sql_favorite);
 $rs_favorite_count = mysqli_num_rows($rs_favorite);
-while ( $row_favorite = mysqli_fetch_assoc($rs_favorite) ) {
+while ( $rs_favorite && ($row_favorite = mysqli_fetch_assoc($rs_favorite)) ) {
     $rows_favorite[] = $row_favorite;
 }
 
 $rs_favorite_rent = mysqli_query($Conn, $sql_favorite_rent);
 $rs_favorite_rent_count = mysqli_num_rows($rs_favorite_rent);
-while ( $row_favorite_rent = mysqli_fetch_assoc($rs_favorite_rent) ) {
+while ( $rs_favorite_rent && ($row_favorite_rent = mysqli_fetch_assoc($rs_favorite_rent)) ) {
     $rows_favorite_rent[] = $row_favorite_rent;
 }
 
 $rs_status = mysqli_query($Conn, $sql_status);
-$row_status = mysqli_fetch_assoc($rs_status);
+$row_status = $rs_status ? mysqli_fetch_assoc($rs_status) : null;
 $rows_status[] = $row_status;
 
 $rs_status_rent = mysqli_query($Conn, $sql_status_rent);
-$row_status_rent = mysqli_fetch_assoc($rs_status_rent);
+$row_status_rent = $rs_status_rent ? mysqli_fetch_assoc($rs_status_rent) : null;
 $rows_status_rent[] = $row_status_rent;
 
 ?>
@@ -571,7 +571,7 @@ xmlhttp.send();
 <span style="font-size:30px;"></b></span><select style="width:220px;font-size:30px;" name="main" id="main" onchange="apart_list(this)">
 <?php
 $rs_select = mysqli_query($Conn, "SELECT area_main_name FROM molit_area_info group by area_main_name ORDER BY MIN(area_code_seq)");
-while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
+while ( $rs_select && ($row_select = mysqli_fetch_assoc($rs_select)) ) {
     $rows_select[] = $row_select;
 }?>
   <option value="전체" <?php if ($area_main_name=='전체'){echo 'selected';} ?>>전체</option>
@@ -596,7 +596,7 @@ $rs_sub = mysqli_query($Conn, "
             ) AS a
             ORDER BY a.area_sub_name
             ");
-while ( $row_sub = mysqli_fetch_assoc($rs_sub) ) {
+while ( $rs_sub && ($row_sub = mysqli_fetch_assoc($rs_sub)) ) {
     $rows_sub[] = $row_sub;
 }
 foreach (($rows_sub ?? []) as $row_sub) { ?>
@@ -655,45 +655,45 @@ function check4(country){
       <?php foreach (($rows_favorite ?? []) as $row_favorite) { ?>
       <tr>
       <?php if($isMobile == "Y") { ?>
-          <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row_favorite[area_main_name]?>&apart_name=<?=$row_favorite[apart_name]?>&size=<?=$row_favorite[size]?>&dong=<?=$row_favorite[doing]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite['apart_name']?></span></b><br><?=$row_favorite['yearmonthday']?><br><?=$row_favorite['area_main_name']?> <?=$row_favorite['area_name']?> <?=$row_favorite['doing']?></td>
+          <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row_favorite['area_main_name']?>&apart_name=<?=$row_favorite['apart_name']?>&size=<?=$row_favorite['size']?>&dong=<?=$row_favorite['doing']?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite['apart_name']?></span></b><br><?=$row_favorite['yearmonthday']?><br><?=$row_favorite['area_main_name']?> <?=$row_favorite['area_name']?> <?=$row_favorite['doing']?></td>
           <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px;"><b><?=$row_favorite['size']?>㎡</b><br><b><?=$row_favorite['stair']?>층</b><br><b><?=$row_favorite['TYPE']?></b></td>
           <?php
 
           if ( $row_favorite['STATUS']== '신고가') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%상승<br>신고가</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%상승<br>신고가</td>";
           } elseif ( $row_favorite['STATUS']== '상승') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%상승</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%상승</td>";
           } elseif ( $row_favorite['STATUS']== '동일') {
-            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%<br>동일</td>";
+            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%<br>동일</td>";
           } elseif ( $row_favorite['STATUS']== '하락') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%하락</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%하락</td>";
           } elseif ( $row_favorite['STATUS']== '신저가') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%하락<br>신저가</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%하락<br>신저가</td>";
           } else
           {
-            echo "<td style='font-size: 20px;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>신규</td>";
+            echo "<td style='font-size: 20px;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>신규</td>";
           }
           ?>
           <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px;"><b><?=$row_favorite['price_max']?>억<br><?php if($row_favorite['max_percent']>=30){ echo "<span style='color:red;'>최고가<br>대비<br>"; echo $row_favorite['max_percent']; echo "%<br>하락</span>";} elseif($row_favorite['max_percent']>=30){ echo "<span style='color:red;'>최고가<br>대비<br>"; echo abs($row_favorite['max_percent']); echo "%<br>상승</span>";} else{ echo "최고가<br>대비<br>"; echo $row_favorite['max_percent']; echo "%<br>하락";} ?></b></td>
           <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px;"><b><?=$row_favorite['last_price']?>억</b><br>(<?=$row_favorite['last_price_date']?>)<br><b><?=$row_favorite['max_price']?>억</b><br>(<?=$row_favorite['max_price_date']?>억)</td>
       <?php }else{ ?>
-          <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px; width:35%;"><a href='./apart.php?area_main_name=<?=$row_favorite[area_main_name]?>&apart_name=<?=$row_favorite[apart_name]?>&size=<?=$row_favorite[size]?>&dong=<?=$row_favorite[doing]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite['apart_name']?></span></b><br><?=$row_favorite['yearmonthday']?><br><?=$row_favorite['area_main_name']?> <?=$row_favorite['area_name']?> <?=$row_favorite['doing']?></td>
+          <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px; width:35%;"><a href='./apart.php?area_main_name=<?=$row_favorite['area_main_name']?>&apart_name=<?=$row_favorite['apart_name']?>&size=<?=$row_favorite['size']?>&dong=<?=$row_favorite['doing']?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite['apart_name']?></span></b><br><?=$row_favorite['yearmonthday']?><br><?=$row_favorite['area_main_name']?> <?=$row_favorite['area_name']?> <?=$row_favorite['doing']?></td>
           <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px; width:14%;"><b><?=$row_favorite['size']?>㎡</b><br><b><?=$row_favorite['stair']?>층</b><br><b><?=$row_favorite['TYPE']?></b></td>
           <?php
 
           if ( $row_favorite['STATUS']== '신고가') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px; width:12%;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%상승<br>신고가</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px; width:12%;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%상승<br>신고가</td>";
           } elseif ( $row_favorite['STATUS']== '상승') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px; width:12%;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%상승</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px; width:12%;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%상승</td>";
           } elseif ( $row_favorite['STATUS']== '동일') {
-            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px; width:12%;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%<br>동일</td>";
+            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px; width:12%;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%<br>동일</td>";
           } elseif ( $row_favorite['STATUS']== '하락') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px; width:12%;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%하락</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px; width:12%;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%하락</td>";
           } elseif ( $row_favorite['STATUS']== '신저가') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px; width:12%;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>$row_favorite[percent]%하락<br>신저가</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px; width:12%;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>{$row_favorite['percent']}%하락<br>신저가</td>";
           } else
           {
-            echo "<td style='font-size: 20px; width:12%;'><b>$row_favorite[price]억</b><br>$row_favorite[price_last]억<br>신규</td>";
+            echo "<td style='font-size: 20px; width:12%;'><b>{$row_favorite['price']}억</b><br>{$row_favorite['price_last']}억<br>신규</td>";
           }
           ?>
           <td style="background-color:rgba(150, 75, 0, 0.2); font-size: 20px; width:13%;"><b><?=$row_favorite['price_max']?>억<br><?php if($row_favorite['max_percent']>=30){ echo "<span style='color:red;'>최고가 대비<br>"; echo $row_favorite['max_percent']; echo "%하락</span>";} elseif($row_favorite['max_percent']>=30){ echo "<span style='color:red;'>최고가 대비<br>"; echo abs($row_favorite['max_percent']); echo "%상승</span>";} else{ echo "최고가 대비<br>"; echo $row_favorite['max_percent']; echo "%하락";} ?></b></td>
@@ -708,45 +708,45 @@ function check4(country){
       <?php foreach (($rows_favorite_rent ?? []) as $row_favorite_rent) { ?>
       <tr>
       <?php if($isMobile == "Y") { ?>
-          <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row_favorite_rent[area_main_name]?>&apart_name=<?=$row_favorite_rent[apart_name]?>&size=<?=$row_favorite_rent[size]?>&dong=<?=$row_favorite_rent[dong]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite_rent['apart_name']?></span></b><br><?=$row_favorite_rent['yearmonthday']?> <br><?=$row_favorite_rent['area_main_name']?> <?=$row_favorite_rent['area_name']?> <?=$row_favorite_rent[dong]?></td>
+          <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row_favorite_rent['area_main_name']?>&apart_name=<?=$row_favorite_rent['apart_name']?>&size=<?=$row_favorite_rent['size']?>&dong=<?=$row_favorite_rent['dong']?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite_rent['apart_name']?></span></b><br><?=$row_favorite_rent['yearmonthday']?> <br><?=$row_favorite_rent['area_main_name']?> <?=$row_favorite_rent['area_name']?> <?=$row_favorite_rent['dong']?></td>
           <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px;"><b><?=$row_favorite_rent['size']?>㎡</b><br><b><?=$row_favorite_rent['stair']?>층</b><br><b><?=$row_favorite_rent['TYPE']?></b></td>
           <?php
 
           if ( $row_favorite_rent['STATUS']== '신고가') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]%상승<br>신고가</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}%상승<br>신고가</td>";
           } elseif ( $row_favorite_rent['STATUS']== '상승') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]%상승</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}%상승</td>";
           } elseif ( $row_favorite_rent['STATUS']== '동일') {
-            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]%<br>동일</td>";
+            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}%<br>동일</td>";
           } elseif ( $row_favorite_rent['STATUS']== '하락') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]%하락</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}%하락</td>";
           } elseif ( $row_favorite_rent['STATUS']== '신저가') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]%하락<br>신저가</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}%하락<br>신저가</td>";
           } else
           {
-            echo "<td style='font-size: 20px;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>신규</td>";
+            echo "<td style='font-size: 20px;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>신규</td>";
           }
           ?>
           <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px;"><b><?=$row_favorite_rent['price_max']?>억<br><?php if($row_favorite_rent['max_percent']>=30){ echo "<span style='color:red;'>최고가<br>대비<br>"; echo $row_favorite_rent['max_percent']; echo "%<br>하락</span>";} elseif($row_favorite_rent['max_percent']<0){ echo "<span style='color:red;'>최고가<br>대비<br>"; echo abs($row_favorite_rent['max_percent']); echo "%<br>상승</span>";} else{ echo "최고가<br>대비<br>"; echo $row_favorite_rent['max_percent']; echo "%<br>하락";} ?></b></td>
           <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px;"><b><?=$row_favorite_rent['last_price']?>억</b><br>(<?=$row_favorite_rent['last_price_date']?>)<br><b><?=$row_favorite_rent['max_price']?>억</b><br>(<?=$row_favorite_rent['max_price_date']?>)</td>
       <?php }else { ?>
-          <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px; width:35%;"><a href='./apart_rent.php?area_main_name=<?=$row_favorite_rent[area_main_name]?>&apart_name=<?=$row_favorite_rent[apart_name]?>&size=<?=$row_favorite_rent[size]?>&dong=<?=$row_favorite_rent[dong]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite_rent['apart_name']?></span></b><br><?=$row_favorite_rent['yearmonthday']?> <br><?=$row_favorite_rent['area_main_name']?> <?=$row_favorite_rent['area_name']?> <?=$row_favorite_rent[dong]?></td>
+          <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px; width:35%;"><a href='./apart_rent.php?area_main_name=<?=$row_favorite_rent['area_main_name']?>&apart_name=<?=$row_favorite_rent['apart_name']?>&size=<?=$row_favorite_rent['size']?>&dong=<?=$row_favorite_rent['dong']?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_favorite_rent['apart_name']?></span></b><br><?=$row_favorite_rent['yearmonthday']?> <br><?=$row_favorite_rent['area_main_name']?> <?=$row_favorite_rent['area_name']?> <?=$row_favorite_rent['dong']?></td>
           <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px; width:14%;"><b><?=$row_favorite_rent['size']?>㎡</b><br><b><?=$row_favorite_rent['stair']?>층</b><br><b><?=$row_favorite_rent['TYPE']?></b></td>
           <?php
 
           if ( $row_favorite_rent['STATUS']== '신고가') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px; width:12%;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]% 상승<br>신고가</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px; width:12%;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}% 상승<br>신고가</td>";
           } elseif ( $row_favorite_rent['STATUS']== '상승') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px; width:12%;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]% 상승</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px; width:12%;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}% 상승</td>";
           } elseif ( $row_favorite_rent['STATUS']== '동일') {
-            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px; width:12%;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]%<br>동일</td>";
+            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px; width:12%;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}%<br>동일</td>";
           } elseif ( $row_favorite_rent['STATUS']== '하락') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px; width:12%;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]% 하락</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px; width:12%;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}% 하락</td>";
           } elseif ( $row_favorite_rent['STATUS']== '신저가') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px; width:12%;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>$row_favorite_rent[percent]% 하락<br>신저가</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px; width:12%;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>{$row_favorite_rent['percent']}% 하락<br>신저가</td>";
           } else
           {
-            echo "<td style='font-size: 20px; width:12%;'><b>$row_favorite_rent[rent_price]억</b><br>$row_favorite_rent[price_last]억<br>신규</td>";
+            echo "<td style='font-size: 20px; width:12%;'><b>{$row_favorite_rent['rent_price']}억</b><br>{$row_favorite_rent['price_last']}억<br>신규</td>";
           }
           ?>
           <td style="background-color:rgba(80, 188, 223, 0.2); font-size: 20px; width:13%;"><b><?=$row_favorite_rent['price_max']?>억<br><?php if($row_favorite_rent['max_percent']>=30){ echo "<span style='color:red;'>최고가 대비<br>"; echo $row_favorite_rent['max_percent']; echo "%하락</span>";} elseif($row_favorite_rent['max_percent']<0){ echo "<span style='color:red;'>최고가 대비<br>"; echo abs($row_favorite_rent['max_percent']); echo "%상승</span>";} else{ echo "최고가 대비<br>"; echo $row_favorite_rent['max_percent']; echo "%하락";} ?></b></td>
@@ -821,23 +821,23 @@ function check4(country){
     <tbody>
       <?php $add_count = 0; foreach (($rows ?? []) as $row) { if($add_count!=0 && fmod($add_count, 15)==0){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
       <tr>
-          <td style="font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row[area_main_name]?>&apart_name=<?=$row[apart_name]?>&size=<?=$row[size]?>&dong=<?=$row[doing]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row['apart_name']?></span></b><br><?=$row['yearmonthday']?><br><?=$row['area_main_name']?> <?=$row['area_name']?> <?=$row['doing']?></td>
+          <td style="font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row['area_main_name']?>&apart_name=<?=$row['apart_name']?>&size=<?=$row['size']?>&dong=<?=$row['doing']?>&all_area=N'><b><span style="font-size: 27px;"><?=$row['apart_name']?></span></b><br><?=$row['yearmonthday']?><br><?=$row['area_main_name']?> <?=$row['area_name']?> <?=$row['doing']?></td>
           <td style="font-size: 20px;"><b><?=$row['size']?>㎡</b><br><b><?=$row['stair']?>층</b><br><b><?=$row['TYPE']?></b></td>
           <?php
 
           if ( $row['STATUS']== '신고가') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px;'><b>$row[price]억</b><br>$row[price_last]억<br>$row[percent]%상승<br>신고가</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px;'><b>{$row['price']}억</b><br>{$row['price_last']}억<br>{$row['percent']}%상승<br>신고가</td>";
           } elseif ( $row['STATUS']== '상승') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px;'><b>$row[price]억</b><br>$row[price_last]억<br>$row[percent]%상승</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px;'><b>{$row['price']}억</b><br>{$row['price_last']}억<br>{$row['percent']}%상승</td>";
           } elseif ( $row['STATUS']== '동일') {
-            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px;'><b>$row[price]억</b><br>$row[price_last]억<br>$row[percent]%<br>동일</td>";
+            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px;'><b>{$row['price']}억</b><br>{$row['price_last']}억<br>{$row['percent']}%<br>동일</td>";
           } elseif ( $row['STATUS']== '하락') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px;'><b>$row[price]억</b><br>$row[price_last]억<br>$row[percent]%하락</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px;'><b>{$row['price']}억</b><br>{$row['price_last']}억<br>{$row['percent']}%하락</td>";
           } elseif ( $row['STATUS']== '신저가') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px;'><b>$row[price]억</b><br>$row[price_last]억<br>$row[percent]%하락<br>신저가</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px;'><b>{$row['price']}억</b><br>{$row['price_last']}억<br>{$row['percent']}%하락<br>신저가</td>";
           } else
           {
-            echo "<td style='font-size: 20px;'><b>$row[price]억</b><br>$row[price_last]억<br>신규</td>";
+            echo "<td style='font-size: 20px;'><b>{$row['price']}억</b><br>{$row['price_last']}억<br>신규</td>";
           }
           ?>
           <td style="font-size: 20px;"><b><?=$row['price_max']?>억<br><?php if($row['max_percent']>=30){ echo "<span style='color:red;'>최고가<br>대비<br>"; echo $row['max_percent']; echo "%<br>하락</span>";} elseif($row['max_percent']<0){ echo "<span style='color:green;'>최고가<br>대비<br>"; echo abs($row['max_percent']); echo "%<br>상승</span>";} else{ echo "최고가<br>대비<br>"; echo $row['max_percent']; echo "%<br>하락";} ?></b></td>
@@ -892,23 +892,23 @@ function check4(country){
     <tbody>
       <?php $add_count = 0; foreach (($rows_rent ?? []) as $row_rent) { if($add_count!=0 && fmod($add_count, 15)==0){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
       <tr>
-          <td style="font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row_rent[area_main_name]?>&apart_name=<?=$row_rent[apart_name]?>&size=<?=$row_rent[size]?>&dong=<?=$row_rent[dong]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_rent['apart_name']?></span></b><br><?=$row_rent['yearmonthday']?> <br><?=$row_rent['area_main_name']?> <?=$row_rent['area_name']?> <?=$row_rent[dong]?></td>
+          <td style="font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row_rent['area_main_name']?>&apart_name=<?=$row_rent['apart_name']?>&size=<?=$row_rent['size']?>&dong=<?=$row_rent['dong']?>&all_area=N'><b><span style="font-size: 27px;"><?=$row_rent['apart_name']?></span></b><br><?=$row_rent['yearmonthday']?> <br><?=$row_rent['area_main_name']?> <?=$row_rent['area_name']?> <?=$row_rent['dong']?></td>
           <td style="font-size: 20px;"><b><?=$row_rent['size']?>㎡</b><br><b><?=$row_rent['stair']?>층</b><br><b><?=$row_rent['TYPE']?></b></td>
           <?php
 
           if ( $row_rent['STATUS']== '신고가') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px;'><b>$row_rent[rent_price]억</b><br>$row_rent[price_last]억<br>$row_rent[percent]%상승<br>신고가</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.7); font-size: 20px;'><b>{$row_rent['rent_price']}억</b><br>{$row_rent['price_last']}억<br>{$row_rent['percent']}%상승<br>신고가</td>";
           } elseif ( $row_rent['STATUS']== '상승') {
-            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px;'><b>$row_rent[rent_price]억</b><br>$row_rent[price_last]억<br>$row_rent[percent]%상승</td>";
+            echo "<td style='background-color:rgba(0, 255, 0, 0.4); font-size: 20px;'><b>{$row_rent['rent_price']}억</b><br>{$row_rent['price_last']}억<br>{$row_rent['percent']}%상승</td>";
           } elseif ( $row_rent['STATUS']== '동일') {
-            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px;'><b>$row_rent[rent_price]억</b><br>$row_rent[price_last]억<br>$row_rent[percent]%<br>동일</td>";
+            echo "<td style='background-color:rgba(255, 255, 0, 0.5); font-size: 20px;'><b>{$row_rent['rent_price']}억</b><br>{$row_rent['price_last']}억<br>{$row_rent['percent']}%<br>동일</td>";
           } elseif ( $row_rent['STATUS']== '하락') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px;'><b>$row_rent[rent_price]억</b><br>$row_rent[price_last]억<br>$row_rent[percent]%하락</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.4); font-size: 20px;'><b>{$row_rent['rent_price']}억</b><br>{$row_rent['price_last']}억<br>{$row_rent['percent']}%하락</td>";
           } elseif ( $row_rent['STATUS']== '신저가') {
-            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px;'><b>$row_rent[rent_price]억</b><br>$row_rent[price_last]억<br>$row_rent[percent]%하락<br>신저가</td>";
+            echo "<td style='background-color:rgba(255, 0, 0, 0.7); font-size: 20px;'><b>{$row_rent['rent_price']}억</b><br>{$row_rent['price_last']}억<br>{$row_rent['percent']}%하락<br>신저가</td>";
           } else
           {
-            echo "<td style='font-size: 20px;'><b>$row_rent[rent_price]억</b><br>$row_rent[price_last]억<br>신규</td>";
+            echo "<td style='font-size: 20px;'><b>{$row_rent['rent_price']}억</b><br>{$row_rent['price_last']}억<br>신규</td>";
           }
           ?>
           <td style="font-size: 20px;"><b><?=$row_rent['price_max']?>억<br><?php if($row_rent['max_percent']>=30){ echo "<span style='color:red;'>최고가<br>대비<br>"; echo $row_rent['max_percent']; echo "%<br>하락</span>";} elseif($row_rent['max_percent']<0){ echo "<span style='color:green;'>최고가<br>대비<br>"; echo abs($row_rent['max_percent']); echo "%<br>상승</span>";} else{ echo "최고가<br>대비<br>"; echo $row_rent['max_percent']; echo "%<br>하락";} ?></b></td>

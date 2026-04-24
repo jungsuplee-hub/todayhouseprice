@@ -40,7 +40,7 @@ if (empty($insert_date)) {
 if ($userid && $user_update == "true") {
   $sql_select_user = "SELECT area_main_name, size1, size2, size3, size4 FROM user WHERE id = '$userid'";
   $rs_user = mysqli_query($Conn, $sql_select_user);
-  $row_user = mysqli_fetch_assoc($rs_user);
+  $row_user = $rs_user ? mysqli_fetch_assoc($rs_user) : null;
 
   $area_main_name = $row_user["area_main_name"];
   $size1 = $row_user["size1"];
@@ -121,7 +121,7 @@ $sql = "SELECT
 
 $rs = mysqli_query($Conn, $sql);
 $rows = [];
-while ($row = mysqli_fetch_assoc($rs)) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
 

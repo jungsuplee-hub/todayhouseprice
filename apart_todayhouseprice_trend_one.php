@@ -72,19 +72,19 @@ ORDER BY insert_Date desc
 
 $result_chart = mysqli_query($Conn, $sql_chart);
 
-while ($row_chart = mysqli_fetch_assoc($result_chart)) {
+while ( $result_chart && ($row_chart = mysqli_fetch_assoc($result_chart)) ) {
     $data_array[] = $row_chart;
 }
 $chart = json_encode($data_array);
 
 $result_min_max = mysqli_query($Conn, $sql_min_max);
-$row_min_max = mysqli_fetch_assoc($result_min_max);
+$row_min_max = $result_min_max ? mysqli_fetch_assoc($result_min_max) : null;
 //여기는 그래프 관련
 
 
 $rs = mysqli_query($Conn, $sql);
 
-while ( $row = mysqli_fetch_assoc($rs) ) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
 
@@ -126,7 +126,7 @@ while ( $row = mysqli_fetch_assoc($rs) ) {
 <span style="font-size:30px;"><b>지역 : </b></span><select style="width:220px;font-size:30px;" name="main" id="main" onchange="apart_list(this)">
 <?php
 $rs_select = mysqli_query($Conn, "SELECT area_main_name FROM molit_area_info group by area_main_name ORDER BY MIN(area_code_seq)");
-while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
+while ( $rs_select && ($row_select = mysqli_fetch_assoc($rs_select)) ) {
     $rows_select[] = $row_select;
 }?>
 <?php foreach (($rows_select ?? []) as $row_select) { ?>

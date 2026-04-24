@@ -24,7 +24,7 @@
 	FROM DUAL;
 	";
 	$rs_count = mysqli_query($Conn, $sql_count);
-	$row_count = mysqli_fetch_assoc($rs_count);
+	$row_count = $rs_count ? mysqli_fetch_assoc($rs_count) : null;
 ?>
 <!DOCTYPE html>
 <html>

@@ -18,7 +18,7 @@ if($userid && $user_update=="true"){
     select area_main_name, size1, size2, size3, size4 from user where id = '$userid'
   ";
   $rs_user = mysqli_query($Conn, $sql_select_user);
-  $row_user = mysqli_fetch_assoc($rs_user);
+  $row_user = $rs_user ? mysqli_fetch_assoc($rs_user) : null;
 
   $area_main_name = $row_user["area_main_name"];
   $size1 = $row_user["size1"];
@@ -110,13 +110,13 @@ FORMAT(IFNULL((SELECT SUM(COUNT) from molit_visit_count WHERE YMD = '$today'),0)
 FROM DUAL;
 ";
 $rs_count = mysqli_query($Conn, $sql_count);
-$row_count = mysqli_fetch_assoc($rs_count);
+$row_count = $rs_count ? mysqli_fetch_assoc($rs_count) : null;
 
 
 
 $rs = mysqli_query($Conn, $sql);
 $rs_count = mysqli_num_rows($rs);
-while ( $row = mysqli_fetch_assoc($rs) ) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
 
@@ -154,7 +154,7 @@ while ( $row = mysqli_fetch_assoc($rs) ) {
 <option>지역선택</option>
 <?php
 $rs_select = mysqli_query($Conn, "SELECT area_main_name FROM molit_area_info group by area_main_name ORDER BY MIN(area_code_seq)");
-while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
+while ( $rs_select && ($row_select = mysqli_fetch_assoc($rs_select)) ) {
     $rows_select[] = $row_select;
 }
 
@@ -176,7 +176,7 @@ foreach (($rows_select ?? []) as $row_select) { ?>
 <option>선택</option>
 <?php
 $rs2_select = mysqli_query($Conn, "SELECT replace(area_sub_name,' ','') as area_sub_name FROM molit_area_info where area_main_name = '$area_main_name' order by area_sub_name");
-while ( $row2_select = mysqli_fetch_assoc($rs2_select) ) {
+while ( $rs2_select && ($row2_select = mysqli_fetch_assoc($rs2_select)) ) {
     $rows2_select[] = $row2_select;
 }
 
@@ -195,7 +195,7 @@ foreach (($rows2_select ?? []) as $row2_select) { ?>
 <option value=''>선택</option>
 <?php
 $rs3_select = mysqli_query($Conn, "select replace(dong,' ','') as dong from billa_dong where area_main_name = '$area_main_name' and replace(area_sub_name,' ','') = replace('$area_sub_name','$area_main_name','') group by area_main_name, area_sub_name, dong");
-while ( $row3_select = mysqli_fetch_assoc($rs3_select) ) {
+while ( $rs3_select && ($row3_select = mysqli_fetch_assoc($rs3_select)) ) {
     $rows3_select[] = $row3_select;
 }
 
@@ -213,7 +213,7 @@ foreach (($rows3_select ?? []) as $row3_select) { ?>
 <option value=''>선택</option>
 <?php
 $rs4_select = mysqli_query($Conn, "select replace(apart_name,' ','') as apart_name from billa_dong where area_main_name = '$area_main_name' and replace(area_sub_name,' ','') = replace('$area_sub_name','$area_main_name','') and replace(dong,' ','') = '$dong' group by area_main_name, area_sub_name, dong, apart_name");
-while ( $row4_select = mysqli_fetch_assoc($rs4_select) ) {
+while ( $rs4_select && ($row4_select = mysqli_fetch_assoc($rs4_select)) ) {
     $rows4_select[] = $row4_select;
 }
 
@@ -387,7 +387,7 @@ function apart_main(e) {
     <tbody>
       <?php $add_count = 0; foreach (($rows ?? []) as $row) { if($add_count!=0 && fmod($add_count, 15)==0){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
       <tr>
-          <td style="font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row[area_main_name]?>&apart_name=<?=$row[apart_name]?>&size=<?=$row[size]?>&dong=<?=$row[dong]?>&all_area=N'><b><?=$row['apart_name']?></b><br><?=$row['area_name']?> <?=$row['dong']?></td>
+          <td style="font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row['area_main_name']?>&apart_name=<?=$row['apart_name']?>&size=<?=$row['size']?>&dong=<?=$row['dong']?>&all_area=N'><b><?=$row['apart_name']?></b><br><?=$row['area_name']?> <?=$row['dong']?></td>
           <td style="font-size: 20px;"><b><?=$row['size']?>㎡</b></td>
           <td style="background-color:rgba(255, 0, 0, 0.3); font-size: 20px;"><b><?=$row['price_last']?>억<br><?=$row['percent']?>%하락</b><br>(<?=$row['rent_rate']?>%)</td>
           <td style="font-size: 20px;"><b><?=$row['last_price']?>억</b><br><?=$row['last_price_date']?><br>(<?=$row['meme_last_price']?>억)</td>
