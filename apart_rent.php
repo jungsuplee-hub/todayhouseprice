@@ -4,11 +4,11 @@ include_once "./top_page.php";
 <?php
 
 
-$apart_name = $_REQUEST["apart_name"];
-$size = ROUND($_REQUEST["size"]);
-$dong = $_REQUEST["dong"];
-$area_main_name = $_REQUEST["area_main_name"];
-$all_area = $_REQUEST["all_area"];
+$apart_name = $_REQUEST["apart_name"] ?? "";
+$size = ROUND($_REQUEST["size"] ?? "");
+$dong = $_REQUEST["dong"] ?? "";
+$area_main_name = $_REQUEST["area_main_name"] ?? "";
+$all_area = $_REQUEST["all_area"] ?? "";
 
 
 
@@ -412,7 +412,7 @@ var marker = new naver.maps.Marker({
     </tr>
     </thead>
     <tbody>
-      <?php $add_count = 0; foreach ($rows as $row) { if($add_count!=0 && fmod($add_count, 15)==0){echo '<tr><td colspan="7"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
+      <?php $add_count = 0; foreach (($rows ?? []) as $row) { if($add_count!=0 && fmod($add_count, 15)==0){echo '<tr><td colspan="7"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
       <tr>
           <!--<td  style="font-size: 20px; <?php if ($row['month_price']!='0') {echo 'color: skyblue;';} ?>"><b><?=$row['apart_name']?></b></td>-->
           <td  style="font-size: 20px; <?php if ($row['month_price']!='0') {echo 'color: skyblue;';} ?>"><b><?=$row['yearmonthday']?></b></td>

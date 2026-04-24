@@ -1,11 +1,11 @@
 <?php
 	//include_once "./db/db_con.php";
-    $id   = $_POST['id'];
-    $pass = $_POST['pass']; // 입력받은 패스워드를 해쉬값으로 암호화
-    //$name = $_POST['name'];
-    //$gender = $_POST['gender'];
-    //$phone = $_POST['phone'];
-    $email  = $_POST['email'];
+    $id   = $_POST['id'] ?? "";
+    $pass = $_POST['pass'] ?? ""; // 입력받은 패스워드를 해쉬값으로 암호화
+    //$name = $_POST['name'] ?? "";
+    //$gender = $_POST['gender'] ?? "";
+    //$phone = $_POST['phone'] ?? "";
+    $email  = $_POST['email'] ?? "";
 
     $times = mktime();  // 현재 서버의 시간을 timestamp 값으로 가져옴
     $date1 = date("Y-m-d H:i:s", $times);  // 초 -> 년-월-일 시:분:초  변환

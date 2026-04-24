@@ -2,7 +2,7 @@
   session_start();
   unset($_SESSION["userid"]);
 
-  $site = $_REQUEST["site"];
+  $site = $_REQUEST["site"] ?? "";
   //unset($_SESSION["username"]);
   if ($site==""){
     $location_text = "<script> alert('로그아웃 했습니다.'); location.href = 'index.php'; </script>";

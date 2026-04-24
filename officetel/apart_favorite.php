@@ -2,7 +2,7 @@
 include_once "../top_page.php";
 ?>
 <?php
-$user_update = $_REQUEST["user_update"];
+$user_update = $_REQUEST["user_update"] ?? "";
 $email = "";
 $email_yn = "";
 
@@ -13,11 +13,11 @@ mysqli_query($Conn, "set session character_set_client=utf8;");
 
 if($userid){
   if($user_update=="true"){
-    $area_main_name = $_REQUEST["area_main_name"];
-    $size1 = $_REQUEST["size1"];
-    $size2 = $_REQUEST["size2"];
-    $size3 = $_REQUEST["size3"];
-    $size4 = $_REQUEST["size4"];
+    $area_main_name = $_REQUEST["area_main_name"] ?? "";
+    $size1 = $_REQUEST["size1"] ?? "";
+    $size2 = $_REQUEST["size2"] ?? "";
+    $size3 = $_REQUEST["size3"] ?? "";
+    $size4 = $_REQUEST["size4"] ?? "";
 
     mysqli_query($Conn, "update user set area_main_name = '$area_main_name', size1 = '$size1', size2 = '$size2', size3 = '$size3', size4 = '$size4'  where id = '$userid';");
     
@@ -134,7 +134,7 @@ while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
     $rows_select[] = $row_select;
 }?>
   <option value="전체" <?php if ($area_main_name=='전체'){echo 'selected';} ?>>전체</option>
-<?php foreach ($rows_select as $row_select) { ?>
+<?php foreach (($rows_select ?? []) as $row_select) { ?>
   <option value=<?php echo $row_select['area_main_name']; if ($row_select['area_main_name']==$area_main_name){echo ' selected';}?>><?php echo $row_select['area_main_name']; ?></option>
 <?php } ?>
 </select>
@@ -211,7 +211,7 @@ function apart_list(e) {
     </tr>
     </thead>
     <tbody>
-      <?php foreach ($rows as $row) { ?>
+      <?php foreach (($rows ?? []) as $row) { ?>
       <tr>
           <td style="font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row[area_main_name]?>&apart_name=<?=$row[apart_name]?>&size=<?=$row[size]?>&dong=<?=$row[dong]?>&all_area=N'><b><?=$row['apart_name']?></b><br><?=$row['area_name']?> <?=$row['dong']?></td>
           <td style="font-size: 20px;"><b><?=$row['size']?>㎡</b></td>
@@ -255,7 +255,7 @@ function apart_list(e) {
     </tr>
     </thead>
     <tbody>
-      <?php foreach ($rows_rent as $row_rent) { ?>
+      <?php foreach (($rows_rent ?? []) as $row_rent) { ?>
       <tr>
           <td style="font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row_rent[area_main_name]?>&apart_name=<?=$row_rent[apart_name]?>&size=<?=$row_rent[size]?>&dong=<?=$row_rent[dong]?>&all_area=N'><b><?=$row_rent['apart_name']?></b><br><?=$row_rent['area_name']?> <?=$row_rent['dong']?></td>
           <td style="font-size: 20px;"><b><?=$row_rent['size']?>㎡</b></td>

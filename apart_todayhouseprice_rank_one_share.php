@@ -3,12 +3,12 @@ include_once "./top_page.php";
 ?>
 
 <?php
-$area_main_name = $_REQUEST["area_main_name"];
+$area_main_name = $_REQUEST["area_main_name"] ?? "";
 
-$size1 = $_REQUEST["size1"];
-$size2 = $_REQUEST["size2"];
-$size3 = $_REQUEST["size3"];
-$size4 = $_REQUEST["size4"];
+$size1 = $_REQUEST["size1"] ?? "";
+$size2 = $_REQUEST["size2"] ?? "";
+$size3 = $_REQUEST["size3"] ?? "";
+$size4 = $_REQUEST["size4"] ?? "";
 
 if ($area_main_name==""){
   $size1 = "true";
@@ -108,7 +108,7 @@ while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
     $rows_select[] = $row_select;
 }?>
   <option value="전체" <?php if ($area_main_name=='전체'){echo 'selected';} ?>>전체</option>
-<?php foreach ($rows_select as $row_select) { ?>
+<?php foreach (($rows_select ?? []) as $row_select) { ?>
   <option value=<?php echo $row_select['area_main_name']; if ($row_select['area_main_name']==$area_main_name){echo ' selected';}?>><?php echo $row_select['area_main_name']; ?></option>
 <?php } ?>
 </select>
@@ -158,7 +158,7 @@ function check4(country){
     </tr>
     </thead>
     <tbody>
-      <?php $add_count = 0; foreach ($rows as $row) { $add_count = $add_count + 1; ?>
+      <?php $add_count = 0; foreach (($rows ?? []) as $row) { $add_count = $add_count + 1; ?>
       <tr>
           <td style="font-size: 30px;"><b><?=$add_count?></b></td>
           <td style="font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row[area_main_name]?>&apart_name=<?=$row[apart_name]?>&size=<?=$row[size]?>&dong=<?=$row[dong]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row['apart_name']?></span></b><br><?=$row['area_name']?> <?=$row['dong']?></td>

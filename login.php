@@ -1,7 +1,7 @@
 <?php
 	include_once "./config.php";
 
-	$site = $_REQUEST["site"];
+	$site = $_REQUEST["site"] ?? "";
 
 ?>
 <!DOCTYPE html>

@@ -2,9 +2,9 @@
 	include './db/db_con.php';
 
 	// hidden의 값 rno를 받아와 그 값에 해당하는 idx 에 대한 reply 테이블 정보 가져오기
-	$rno = $_POST['rno'];
-	$bno = $_POST['bno'];
-	$role = $_POST['userid'];
+	$rno = $_POST['rno'] ?? "";
+	$bno = $_POST['bno'] ?? "";
+	$role = $_POST['userid'] ?? "";
 
 	$sql = mq("delete
 					   from

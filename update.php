@@ -3,7 +3,7 @@
 	include "./db/db_con.php";
 	include "./login_check.php";
 
-	$bno = $_GET['idx']; // $bno에 idx값을 받아와 넣음
+	$bno = $_GET['idx'] ?? ""; // $bno에 idx값을 받아와 넣음
 	/* 받아온 idx값을 선택해서  게시글 정보 가져오기 */
 	$sql = mq("select
 				 *

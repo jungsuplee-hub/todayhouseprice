@@ -1,7 +1,7 @@
 <?php
-    $id   = $_POST['id'];
-    $pass = $_POST['pass'];
-    $site = $_POST['site'];
+    $id   = $_POST['id'] ?? "";
+    $pass = $_POST['pass'] ?? "";
+    $site = $_POST['site'] ?? "";
 
  //$con = mysqli_connect("127.0.0.1", "root", "", "bbs");
  $con = mysqli_connect("127.0.0.1", "root", "e0425820", "jsdb", 3306);

@@ -4,9 +4,9 @@
 
 	$name = $userid;
 	$date = date('Y-m-d');
-	//$userpw = $_POST['pw']; // 입력받은 패스워드를 해쉬값으로 암호화
-	$title = $_POST['title'];
-	$content = $_POST['maintext'];
+	//$userpw = $_POST['pw'] ?? ""; // 입력받은 패스워드를 해쉬값으로 암호화
+	$title = $_POST['title'] ?? "";
+	$content = $_POST['maintext'] ?? "";
 
   if($name!=''){
     mq("alter table board auto_increment =1"); //auto_increment 값 초기화 (삭제 시 번호 비지 않게 하기 위해서)
