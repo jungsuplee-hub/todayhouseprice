@@ -42,7 +42,7 @@ if (!isset($_COOKIE["todayhouseprice"])) {
 }
 if ($is_count) {
   $rs = mysqli_query($Conn, "select count(1) as cnt from molit_visit_count where ymd = '$today' and count_type = 'apart_detail';");
-  $row = mysqli_fetch_assoc($rs);
+  $row = $rs ? mysqli_fetch_assoc($rs) : null;
   if($row['cnt']==0) {
     mysqli_query($Conn, "insert into molit_visit_count (ymd, count, count_type) values('$today',1,'apart_detail');");
   }else{
@@ -66,7 +66,7 @@ FORMAT(IFNULL((SELECT SUM(COUNT) from molit_visit_count WHERE YMD = '$today'),0)
 FROM DUAL;
 ";
 $rs_count = mysqli_query($Conn, $sql_count);
-$row_count = mysqli_fetch_assoc($rs_count);
+$row_count = $rs_count ? mysqli_fetch_assoc($rs_count) : null;
 
 $sql_chart = "
 SELECT insert_date,up_price,down_price,(down_price-up_price) as diff_price FROM
@@ -115,18 +115,18 @@ order by a.insert_date desc
 
 $result_chart = mysqli_query($Conn, $sql_chart);
 
-while ($row_chart = mysqli_fetch_assoc($result_chart)) {
+while ( $result_chart && ($row_chart = mysqli_fetch_assoc($result_chart)) ) {
     $data_array[] = $row_chart;
 }
 $chart = json_encode($data_array);
 
 $result_min_max = mysqli_query($Conn, $sql_min_max);
-$row_min_max = mysqli_fetch_assoc($result_min_max);
+$row_min_max = $result_min_max ? mysqli_fetch_assoc($result_min_max) : null;
 
 
 $rs = mysqli_query($Conn, $sql);
 
-while ( $row = mysqli_fetch_assoc($rs) ) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
 
@@ -403,18 +403,18 @@ order by a.insert_date desc
 
 $result_chart2 = mysqli_query($Conn, $sql_chart2);
 
-while ($row_chart2 = mysqli_fetch_assoc($result_chart2)) {
+while ( $result_chart2 && ($row_chart2 = mysqli_fetch_assoc($result_chart2)) ) {
     $data_array2[] = $row_chart2;
 }
 $chart2 = json_encode($data_array2);
 
 $result_min_max2 = mysqli_query($Conn, $sql_min_max2);
-$row_min_max2 = mysqli_fetch_assoc($result_min_max2);
+$row_min_max2 = $result_min_max2 ? mysqli_fetch_assoc($result_min_max2) : null;
 
 
 $rs2 = mysqli_query($Conn, $sql2);
 
-while ( $row2 = mysqli_fetch_assoc($rs2) ) {
+while ( $rs2 && ($row2 = mysqli_fetch_assoc($rs2)) ) {
     $rows2[] = $row2;
 }
 
@@ -609,18 +609,18 @@ order by a.insert_date desc
 
 $result_chart3 = mysqli_query($Conn, $sql_chart3);
 
-while ($row_chart3 = mysqli_fetch_assoc($result_chart3)) {
+while ( $result_chart3 && ($row_chart3 = mysqli_fetch_assoc($result_chart3)) ) {
     $data_array3[] = $row_chart3;
 }
 $chart3 = json_encode($data_array3);
 
 $result_min_max3 = mysqli_query($Conn, $sql_min_max3);
-$row_min_max3 = mysqli_fetch_assoc($result_min_max3);
+$row_min_max3 = $result_min_max3 ? mysqli_fetch_assoc($result_min_max3) : null;
 
 
 $rs3 = mysqli_query($Conn, $sql3);
 
-while ( $row3 = mysqli_fetch_assoc($rs3) ) {
+while ( $rs3 && ($row3 = mysqli_fetch_assoc($rs3)) ) {
     $rows3[] = $row3;
 }
 

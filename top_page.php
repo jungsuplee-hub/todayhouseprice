@@ -239,7 +239,7 @@ mysqli_query($Conn, "set session character_set_results=utf8;");
 mysqli_query($Conn, "set session character_set_client=utf8;");
 /////////////////////금일 지수//////////////////////////
 $rs_today = mysqli_query($Conn, "select dallor, gumri_usa, gumri_korea, kospi, kosdaq, substr(update_date,1,19) as update_date from today_index");
-$row_today = mysqli_fetch_assoc($rs_today);
+$row_today = $rs_today ? mysqli_fetch_assoc($rs_today) : null;
 
 
 $today = date("Y-m-d");
@@ -248,7 +248,7 @@ $today = date("Y-m-d");
 /////////////////////조회수//////////////////////////
 if ($is_count) {
   $rs = mysqli_query($Conn, "select count(1) as cnt from molit_visit_count where ymd = '$today' and count_type = 'today';");
-  $row = mysqli_fetch_assoc($rs);
+  $row = $rs ? mysqli_fetch_assoc($rs) : null;
   if($row['cnt']==0) {
     mysqli_query($Conn, "insert into molit_visit_count (ymd, count, count_type) values('$today',1,'today');");
   }else{

@@ -75,12 +75,12 @@ FORMAT(IFNULL((SELECT SUM(COUNT) from molit_visit_count WHERE YMD = '$today'),0)
 FROM DUAL;
 ";
 $rs_count = mysqli_query($Conn, $sql_count);
-$row_count = mysqli_fetch_assoc($rs_count);
+$row_count = $rs_count ? mysqli_fetch_assoc($rs_count) : null;
 
 
 $rs = mysqli_query($Conn, $sql);
 $rs_count = mysqli_num_rows($rs);
-while ( $row = mysqli_fetch_assoc($rs) ) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
 
@@ -115,7 +115,7 @@ while ( $row = mysqli_fetch_assoc($rs) ) {
 <span style="font-size:30px;"><b>지역 : </b></span><select style="width:220px;font-size:30px;" name="main" id="main" onchange="apart_list(this)">
 <?php
 $rs_select = mysqli_query($Conn, "SELECT area_main_name FROM molit_area_info group by area_main_name ORDER BY MIN(area_code_seq)");
-while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
+while ( $rs_select && ($row_select = mysqli_fetch_assoc($rs_select)) ) {
     $rows_select[] = $row_select;
 }?>
   <option value="전체" <?php if ($area_main_name=='전체'){echo 'selected';} ?>>전체</option>
@@ -189,7 +189,7 @@ function check4(country){
       <?php $add_count = 0; foreach (($rows ?? []) as $row) { if($add_count!=0 && fmod($add_count, 10)==0){echo '<tr><td colspan="6"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2265060002718871" crossorigin="anonymous"></script> <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-2265060002718871" data-ad-slot="3474043280"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script></td></tr>';} $add_count = $add_count + 1; ?>
       <tr>
           <td style="font-size: 30px;"><b><?=$add_count?></b></td>
-          <td style="font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row[area_main_name]?>&apart_name=<?=$row[apart_name]?>&size=<?=$row[size]?>&dong=<?=$row[dong]?>&all_area=N'><b><span style="font-size: 27px;"><?=$row['apart_name']?></span></b><br><?=$row['area_name']?> <?=$row['dong']?></td>
+          <td style="font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row['area_main_name']?>&apart_name=<?=$row['apart_name']?>&size=<?=$row['size']?>&dong=<?=$row['dong']?>&all_area=N'><b><span style="font-size: 27px;"><?=$row['apart_name']?></span></b><br><?=$row['area_name']?> <?=$row['dong']?></td>
           <td style="font-size: 20px;"><b><?=$row['size']?>㎡</b></td>
           <!--<td style="font-size: 20px;"><b>-<?=$row['diff_price']?>억<br><?php if($row['diff_rate']>50){ echo "<span style='color:fuchsia;'>"; }else if($row['diff_rate']>30){ echo "<span style='color:red;'>"; } ?><?=$row['diff_rate']?>%<?php if($row['diff_rate']>30){ echo "</span>"; } ?></b></td>-->
           <td style="font-size: 20px;"><b><?=$row['last_price']?>억</b></td>

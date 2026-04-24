@@ -25,7 +25,7 @@ if($userid){
       select area_main_name, size1, size2, size3, size4, email, IFNULL(email_yn,'Y') as email_yn from user where id = '$userid'
     ";
     $rs_user = mysqli_query($Conn, $sql_select_user);
-    $row_user = mysqli_fetch_assoc($rs_user);
+    $row_user = $rs_user ? mysqli_fetch_assoc($rs_user) : null;
 
     $size1 = $row_user['size1'];
     $size2 = $row_user['size2'];
@@ -39,7 +39,7 @@ if($userid){
       select area_main_name, size1, size2, size3, size4, email, IFNULL(email_yn,'Y') as email_yn  from user where id = '$userid'
     ";
     $rs_user = mysqli_query($Conn, $sql_select_user);
-    $row_user = mysqli_fetch_assoc($rs_user);
+    $row_user = $rs_user ? mysqli_fetch_assoc($rs_user) : null;
 
     if($row_user['area_main_name']!=""){
       $area_main_name = $row_user['area_main_name'];
@@ -87,7 +87,7 @@ $sql = "
 
 $rs = mysqli_query($Conn, $sql);
 
-while ( $row = mysqli_fetch_assoc($rs) ) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
 
@@ -117,7 +117,7 @@ $sql_rent = "
 
 $rs_rent = mysqli_query($Conn, $sql_rent);
 
-while ( $row_rent = mysqli_fetch_assoc($rs_rent) ) {
+while ( $rs_rent && ($row_rent = mysqli_fetch_assoc($rs_rent)) ) {
     $rows_rent[] = $row_rent;
 }
 
@@ -131,7 +131,7 @@ while ( $row_rent = mysqli_fetch_assoc($rs_rent) ) {
 <span style="font-size:30px;"><b>선호지역 선택 : </b></span><select style="width:220px;font-size:30px;" name="main" id="main" onchange="apart_list(this)">
 <?php
 $rs_select = mysqli_query($Conn, "SELECT area_main_name FROM molit_area_info group by area_main_name ORDER BY MIN(area_code_seq)");
-while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
+while ( $rs_select && ($row_select = mysqli_fetch_assoc($rs_select)) ) {
     $rows_select[] = $row_select;
 }?>
   <option value="전체" <?php if ($area_main_name=='전체'){echo 'selected';} ?>>전체</option>
@@ -217,7 +217,7 @@ function apart_list(e) {
     <tbody>
       <?php foreach (($rows ?? []) as $row) { ?>
       <tr>
-          <td style="font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row[area_main_name]?>&apart_name=<?=$row[apart_name]?>&size=<?=$row[size]?>&dong=<?=$row[dong]?>&all_area=N'><b><?=$row['apart_name']?></b><br><?=$row['area_name']?> <?=$row['dong']?></td>
+          <td style="font-size: 20px;"><a href='./apart.php?area_main_name=<?=$row['area_main_name']?>&apart_name=<?=$row['apart_name']?>&size=<?=$row['size']?>&dong=<?=$row['dong']?>&all_area=N'><b><?=$row['apart_name']?></b><br><?=$row['area_name']?> <?=$row['dong']?></td>
           <td style="font-size: 20px;"><b><?=$row['size']?>㎡</b></td>
           <td style="background-color:rgba(255, 0, 0, 0.3); font-size: 20px;"><b><?=$row['price_last']?>억<br><?=$row['percent']?>%하락</b></td>
           <td style="font-size: 20px;"><b><?=$row['last_price']?>억</b><br><b><?=$row['last_price_date']?></b></td>
@@ -261,7 +261,7 @@ function apart_list(e) {
     <tbody>
       <?php foreach (($rows_rent ?? []) as $row_rent) { ?>
       <tr>
-          <td style="font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row_rent[area_main_name]?>&apart_name=<?=$row_rent[apart_name]?>&size=<?=$row_rent[size]?>&dong=<?=$row_rent[dong]?>&all_area=N'><b><?=$row_rent['apart_name']?></b><br><?=$row_rent['area_name']?> <?=$row_rent['dong']?></td>
+          <td style="font-size: 20px;"><a href='./apart_rent.php?area_main_name=<?=$row_rent['area_main_name']?>&apart_name=<?=$row_rent['apart_name']?>&size=<?=$row_rent['size']?>&dong=<?=$row_rent['dong']?>&all_area=N'><b><?=$row_rent['apart_name']?></b><br><?=$row_rent['area_name']?> <?=$row_rent['dong']?></td>
           <td style="font-size: 20px;"><b><?=$row_rent['size']?>㎡</b></td>
           <td style="background-color:rgba(255, 0, 0, 0.3); font-size: 20px;"><b><?=$row_rent['price_last']?>억<br><?=$row_rent['percent']?>%하락</b></td>
           <td style="font-size: 20px;"><b><?=$row_rent['last_price']?>억</b><br><b><?=$row_rent['last_price_date']?></b></td>

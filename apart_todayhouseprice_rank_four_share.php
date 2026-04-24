@@ -117,12 +117,12 @@ FORMAT(IFNULL((SELECT SUM(COUNT) from molit_visit_count WHERE YMD = '$today'),0)
 FROM DUAL;
 ";
 $rs_count = mysqli_query($Conn, $sql_count);
-$row_count = mysqli_fetch_assoc($rs_count);
+$row_count = $rs_count ? mysqli_fetch_assoc($rs_count) : null;
 
 
 $rs = mysqli_query($Conn, $sql);
 $rs_count = mysqli_num_rows($rs);
-while ( $row = mysqli_fetch_assoc($rs) ) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
 

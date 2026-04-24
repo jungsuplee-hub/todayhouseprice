@@ -43,7 +43,7 @@
 	FROM DUAL;
 	";
 	$rs_count = mysqli_query($Conn, $sql_count);
-	$row_count = mysqli_fetch_assoc($rs_count);
+	$row_count = $rs_count ? mysqli_fetch_assoc($rs_count) : null;
 ?>
 <!DOCTYPE html>
 <html>
@@ -164,7 +164,7 @@
 						<input type="hidden" name="bno" class="bno" value=<?=$bno?>>
 						<input type="hidden" name="userid" class="userid" value=<?=$userid?>>
 						<div><b><?=$reply['name']?></b> / <?=$reply['date']?> <?php if ($userid == $reply['name']) {?><button type="submit" id="rep_btn">삭제</button><?php }?></div>
-						<div><?php echo nl2br("$reply[content]"); ?></div>
+						<div><?php echo nl2br($reply['content']); ?></div>
 					</form>
 					<br>
 				</div>

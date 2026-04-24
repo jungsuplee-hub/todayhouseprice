@@ -52,7 +52,7 @@ limit 100;
 
 $rs = mysqli_query($Conn, $sql);
 $rs_count = mysqli_num_rows($rs);
-while ( $row = mysqli_fetch_assoc($rs) ) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
 
@@ -85,7 +85,7 @@ while ( $row = mysqli_fetch_assoc($rs) ) {
 <span style="font-size:30px;"><b>지역 : </b></span><select style="width:220px;font-size:30px;" name="main" id="main" onchange="apart_list(this)">
 <?php
 $rs_select = mysqli_query($Conn, "SELECT area_main_name FROM molit_area_info group by area_main_name ORDER BY MIN(area_code_seq)");
-while ( $row_select = mysqli_fetch_assoc($rs_select) ) {
+while ( $rs_select && ($row_select = mysqli_fetch_assoc($rs_select)) ) {
     $rows_select[] = $row_select;
 }?>
   <option value="전체" <?php if ($area_main_name=='전체'){echo 'selected';} ?>>전체</option>

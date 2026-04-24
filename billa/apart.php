@@ -53,17 +53,17 @@ FORMAT(IFNULL((SELECT SUM(COUNT) from molit_visit_count WHERE YMD = '$today'),0)
 FROM DUAL;
 ";
 $rs_count = mysqli_query($Conn, $sql_count);
-$row_count = mysqli_fetch_assoc($rs_count);
+$row_count = $rs_count ? mysqli_fetch_assoc($rs_count) : null;
 
 $rs = mysqli_query($Conn, $sql);
 $rs_count = mysqli_num_rows($rs);
-while ( $row = mysqli_fetch_assoc($rs) ) {
+while ( $rs && ($row = mysqli_fetch_assoc($rs)) ) {
     $rows[] = $row;
 }
 
 
 $rs_doro = mysqli_query($Conn, $sql_doro);
-$row_doro = mysqli_fetch_assoc($rs_doro);
+$row_doro = $rs_doro ? mysqli_fetch_assoc($rs_doro) : null;
 
 $build_year = $row_doro['build_year'];
 $doro = $row_doro['doro'];
@@ -78,13 +78,13 @@ $sql_min_max = "SELECT ROUND(count(1)/10) as cnt, ROUND(MAX(CAST(price AS DECIMA
 $result_chart = mysqli_query($Conn, $sql_chart);
 
 if (mysqli_num_rows($result_chart) > 0) {
-    while ($row_chart = mysqli_fetch_assoc($result_chart)) {
+    while ( $result_chart && ($row_chart = mysqli_fetch_assoc($result_chart)) ) {
         $data_array[] = $row_chart;
     }
     $chart = json_encode($data_array);
 
     $result_min_max = mysqli_query($Conn, $sql_min_max);
-    $row_min_max = mysqli_fetch_assoc($result_min_max);
+    $row_min_max = $result_min_max ? mysqli_fetch_assoc($result_min_max) : null;
 
 }
 //여기는 그래프 관련
@@ -128,7 +128,7 @@ if (mysqli_num_rows($result_chart) > 0) {
     select count(1) cnt from molit_favorite where userid = '$userid' and area_main_name = '$area_main_name' and dong = '$dong' and apart_name = '$apart_name' and size = '$size';
     ";
     $rs_favorite = mysqli_query($Conn, $sql_favorite);
-    $row_favorite = mysqli_fetch_assoc($rs_favorite);
+    $row_favorite = $rs_favorite ? mysqli_fetch_assoc($rs_favorite) : null;
 
     if ($row_favorite['cnt']>0){
     ?>

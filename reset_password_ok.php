@@ -13,7 +13,7 @@
     $Conn = mysqli_connect("127.0.0.1", "root", "e0425820", "jsdb", 3306);
 
     $rs = mysqli_query($Conn, "select count(1) as cnt from user where id ='$id' and email = '$email';");
-    $row = mysqli_fetch_assoc($rs);
+    $row = $rs ? mysqli_fetch_assoc($rs) : null;
 
     if($row['cnt']>0){
       mysqli_query($Conn, "update user set pass = '$pass' where id = '$id' and email = '$email'");
